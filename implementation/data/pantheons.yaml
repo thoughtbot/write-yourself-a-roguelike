@@ -1,0 +1,49 @@
+---
+Archeologist:
+  lawful: "Quetzalcoatl"
+  neutral: "Camaxtli"
+  chaotic: "Huhetotl"
+Barbarian:
+  lawful: "Mitra"
+  neutral: "Crom"
+  chaotic: "Set"
+Caveman:
+  lawful: "Anu"
+  neutral: "Ishtar"
+  chaotic: "Anshar"
+Healer:
+  lawful: "Athena"
+  neutral: "Hermes"
+  chaotic: "Poseidon"
+Knight:
+  lawful: "Lugh"
+  neutral: "Brigit"
+  chaotic: "Manannan Mac Lir"
+Monk:
+  lawful: "Shan Lai Ching"
+  neutral: "Chih Sung-tzu"
+  chaotic: "Huan Ti"
+Ranger:
+  lawful: "Mercury"
+  neutral: "Venus"
+  chaotic: "Mars"
+Rogue:
+  lawful: "Issek"
+  neutral: "Mog"
+  chaotic: "Kos"
+Samurai:
+  lawful: "Amaterasu Omikami"
+  neutral: "Raijin"
+  chaotic: "Susanowo"
+Tourist:
+  lawful: "Blind Io"
+  neutral: "The Lady"
+  chaotic: "Offler"
+Valkyrie:
+  lawful: "Tyr"
+  neutral: "Odin"
+  chaotic: "Loki"
+Wizard:
+  lawful: "Ptah"
+  neutral: "Thoth"
+  chaotic: "Anhur"
