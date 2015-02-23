@@ -6,27 +6,32 @@ class GenderSelectionScreen
 
   GENDER_FILE = "data/genders.yaml"
 
-  def initialize(game)
+  def initialize(game, random = false)
     @genders = YAML.load_file(GENDER_FILE).each_with_object({}) do |gender, hash|
       hash[gender["hotkey"]] = Gender.from_yaml(gender)
     end
     @game = game
+    @random = random
   end
 
   def tick
-    render
-    choice = getch
-    until @genders.key?(choice) || "*q".index(choice)
+    if @random
+      @game.player.gender = @genders.values.sample
+    else
+      render
       choice = getch
+      until @genders.key?(choice) || "*q".index(choice)
+        choice = getch
+      end
+
+      case choice
+      when 'q' then return nil
+      when '*' then @game.player.gender = @genders.values.sample
+      else @game.player.gender = @genders[choice]
+      end
     end
 
-    case choice
-    when 'q' then return nil
-    when '*' then @game.player.gender = @genders.values.sample
-    else @game.player.gender = @genders[choice]
-    end
-
-    AlignmentSelectionScreen.new(@game)
+    AlignmentSelectionScreen.new(@game, @random)
   end
 
   private
@@ -45,11 +50,11 @@ class GenderSelectionScreen
       addstr("#{hotkey} - #{gender.name}")
     end
 
-    setpos(3 + @genders.length, pos)
+    setpos(2 + @genders.length, pos)
     addstr("* - Random")
-    setpos(4 + @genders.length, pos)
+    setpos(3 + @genders.length, pos)
     addstr("q - Quit")
-    setpos(5 + @genders.length, pos)
+    setpos(4 + @genders.length, pos)
     addstr("(end)")
   end
 end

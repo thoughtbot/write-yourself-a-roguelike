@@ -15,6 +15,12 @@ In this vein, we will design our roguelike to be akin to the game NetHack. NetHa
 
 ## Creating a Character
 
+There's a lot of information that goes in to creating a character. From a top level, our character will have a role, race, gender, and alignment. The role determines which pantheon of gods will be active during the game. Our role and race combined will determine our starting stats (strength, dexterity, intelligence, wisdom, constitution, charisma, hit points, and energy) as well as how our stats change when we level up. Gender is simply for preferred pronoun usage and alignment determines which god in our pantheon is the one we worship (or choose not to worship).
+
+We'll need to take the corresponding steps to allow the player to choose their role, race, gender, and alignment. There are however some restrictions. Certain roles are restrited to which race and alignments are available. Similarly your race will limit which alignments are available.
+
+Afterwards we'll need to calculate a characters base stats. For strength, wisdom, intellegence, dexterity, charisma, and constitution we allocate 75 points. A number of those points are determined by the player's role. The remaining points are allocated according to probabilities set by the selected role.
+
 On the first screen of NetHack we see the following:
 
 ->![character selection](images/character.png =600x)<-
@@ -130,6 +136,8 @@ This YAML file will make it very easy to extend our role definitions to include 
     end                                                                                                
 
 Here we introduce `clear` which will completely clear the entire screen. After that we simply iterate through all the role options. Before we go too far down the rabbit hole, let's start refactoring what we have into object-oriented code
+
+## Creating the Dungeon
 
 
     

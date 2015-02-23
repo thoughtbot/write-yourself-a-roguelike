@@ -12,7 +12,8 @@ class TitleScreen
     render
     case getch
     when 'n' then RoleSelectionScreen.new(@game)
-    else nil
+    when 'q' then nil
+    else RoleSelectionScreen.new(@game, true)
     end
   end
 

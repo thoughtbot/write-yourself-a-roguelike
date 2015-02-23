@@ -8,27 +8,32 @@ class RoleSelectionScreen
 
   ROLES_FILE = "data/roles.yaml"
 
-  def initialize(game)
+  def initialize(game, random = false)
     @roles = YAML.load_file(ROLES_FILE).each_with_object({}) do |role, hash|
       hash[role["hotkey"]] = Role.from_yaml(role)
     end
     @game = game
+    @random = random
   end
 
   def tick
-    render
-    choice = getch
-    until @roles.key?(choice) || "*q".index(choice)
+    if @random
+      @game.player.role = @roles.values.sample
+    else
+      render
       choice = getch
+      until @roles.key?(choice) || "*q".index(choice)
+        choice = getch
+      end
+
+      case choice
+      when 'q' then return nil
+      when '*' then @game.player.role = @roles.values.sample
+      else @game.player.role = @roles[choice]
+      end
     end
 
-    case choice
-    when 'q' then return nil
-    when '*' then @game.player.role = @roles.values.sample
-    else @game.player.role = @roles[choice]
-    end
-
-    RaceSelectionScreen.new(@game)
+    RaceSelectionScreen.new(@game, @random)
   end
 
   private

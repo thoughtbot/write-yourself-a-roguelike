@@ -1,6 +1,8 @@
 require "yaml"
+require "pantheon"
 
 class PantheonDecider
+  include Curses
   PANTHEON_FILE = "data/pantheons.yaml"
 
   def initialize(role)
@@ -11,6 +13,6 @@ class PantheonDecider
   end
 
   def pantheon
-    @pantheons.fetch(@role) { @pantheons.values.sample }
+    @pantheons.fetch(@role.masculine) { @pantheons.values.sample }
   end
 end

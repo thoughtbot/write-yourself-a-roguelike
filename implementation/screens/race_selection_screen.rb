@@ -6,7 +6,7 @@ class RaceSelectionScreen
 
   RACE_FILE = "data/races.yaml"
 
-  def initialize(game)
+  def initialize(game, random = false)
     @role = game.player.role
     @races = YAML.load_file(RACE_FILE).select do |race|
       @role.race_choices.index(race["hotkey"])
@@ -14,26 +14,31 @@ class RaceSelectionScreen
       hash[race["hotkey"]] = Race.from_yaml(race)
     end
     @game = game
+    @random = random
   end
 
   def tick
-    if @races.length == 1
-      @game.player.race = @races.values.first
+    if @random
+      @game.player.race = @races.values.sample
     else
-      render
-      choice = getch
-      until @races.key?(choice) || "*q".index(choice)
+      if @races.length == 1
+        @game.player.race = @races.values.first
+      else
+        render
         choice = getch
-      end
+        until @races.key?(choice) || "*q".index(choice)
+          choice = getch
+        end
 
-      case choice
-      when 'q' then return nil
-      when '*' then @game.player.race = @races.values.sample
-      else @game.player.race = @races[choice]
+        case choice
+        when 'q' then return nil
+        when '*' then @game.player.race = @races.values.sample
+        else @game.player.race = @races[choice]
+        end
       end
     end
 
-    GenderSelectionScreen.new(@game)
+    GenderSelectionScreen.new(@game, @random)
   end
 
   private

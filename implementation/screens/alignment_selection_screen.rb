@@ -1,33 +1,44 @@
 require "alignment"
+require "screens/level_screen"
 
 class AlignmentSelectionScreen
   include Curses
 
   ALIGNMENTS_FILE = "data/alignments.yaml"
 
-  def initialize(game)
+  def initialize(game, random = false)
     @game = game
     @alignments = YAML.load_file(ALIGNMENTS_FILE).select do |alignment|
       possible_alignments.index(alignment["hotkey"])
     end.each_with_object({}) do |alignment, hash|
       hash[alignment["hotkey"]] = Alignment.from_yaml(alignment)
     end
+    @random = random
   end
 
   def tick
-    render
-    choice = getch
-    until @alignments.key?(choice) || "*q".index(choice)
-      choice = getch
+    if @random
+      @game.player.alignment = @alignments.values.sample
+    else
+      if @alignments.length == 1
+        @game.player.alignment = @alignments.values.first
+      else
+        render
+        choice = getch
+        until @alignments.key?(choice) || "*q".index(choice)
+          choice = getch
+        end
+
+        case choice
+        when 'q' then return nil
+        when '*' then @game.player.alignment = @alignments.values.sample
+        else @game.player.alignment = @alignments[choice]
+        end
+      end
     end
 
-    case choice
-    when 'q' then return nil
-    when '*' then @game.player.alignment = @alignments.values.sample
-    else @game.player.alignment = @alignments[choice]
-    end
-
-    nil
+    @game.player.setup
+    LevelScreen.new(@game)
   end
 
   private

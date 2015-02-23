@@ -2,15 +2,159 @@
 - name: "human"
   hotkey: "h"
   alignments: "cln"
+  min_attributes:
+    strength: 3
+    intelligence: 3
+    wisdom: 3
+    dexterity: 3
+    constitution: 3
+    charisma: 3
+  max_attributes:
+    strength: 118
+    intelligence: 18
+    wisdom: 18
+    dexterity: 18
+    constitution: 18
+    charisma: 18
+  hitpoints:
+    base: 2
+    base_random: 0
+    low: 0
+    low_random: 2
+    high: 1
+    high_random: 0
+  energy:
+    base: 1
+    base_random: 0
+    low: 2
+    low_random: 0
+    high: 2
+    high_random: 0
+
 - name: "dwarf"
   hotkey: "d"
   alignments: "l"
+  min_attributes:
+    strength: 3
+    intelligence: 3
+    wisdom: 3
+    dexterity: 3
+    constitution: 3
+    charisma: 3
+  max_attributes:
+    strength: 118
+    intelligence: 16
+    wisdom: 16
+    dexterity: 20
+    constitution: 20
+    charisma: 16
+  hitpoints:
+    base: 4
+    base_random: 0
+    low: 0
+    low_random: 3
+    high: 2
+    high_random: 0
+  energy:
+    base: 0
+    base_random: 0
+    low: 0
+    low_random: 0
+    high: 0
+    high_random: 0
+
 - name: "gnome"
   hotkey: "g"
   alignments: "n"
+  min_attributes:
+    strength: 3
+    intelligence: 3
+    wisdom: 3
+    dexterity: 3
+    constitution: 3
+    charisma: 3
+  max_attributes:
+    strength: 68
+    intelligence: 19
+    wisdom: 18
+    dexterity: 18
+    constitution: 18
+    charisma: 18
+  hitpoints:
+    base: 1
+    base_random: 0
+    low: 0
+    low_random: 1
+    high: 0
+    high_random: 0
+  energy:
+    base: 2
+    base_random: 0
+    low: 2
+    low_random: 0
+    high: 2
+    high_random: 0
+
 - name: "orc"
   hotkey: "o"
   alignments: "c"
+  min_attributes:
+    strength: 3
+    intelligence: 3
+    wisdom: 3
+    dexterity: 3
+    constitution: 3
+    charisma: 3
+  max_attributes:
+    strength: 68
+    intelligence: 16
+    wisdom: 16
+    dexterity: 18
+    constitution: 18
+    charisma: 16
+  hitpoints:
+    base: 1
+    base_random: 0
+    low: 0
+    low_random: 1
+    high: 0
+    high_random: 0
+  energy:
+    base: 1
+    base_random: 0
+    low: 1
+    low_random: 0
+    high: 1
+    high_random: 0
+
 - name: "elf"
   hotkey: "e"
   alignments: "c"
+  min_attributes:
+    strength: 3
+    intelligence: 3
+    wisdom: 3
+    dexterity: 3
+    constitution: 3
+    charisma: 3
+  max_attributes:
+    strength: 18
+    intelligence: 20
+    wisdom: 20
+    dexterity: 18
+    constitution: 16
+    charisma: 18
+  hitpoints:
+    base: 1
+    base_random: 0
+    low: 0
+    low_random: 1
+    high: 1
+    high_random: 0
+  energy:
+    base: 2
+    base_random: 0
+    low: 3
+    low_random: 0
+    high: 3
+    high_random: 0

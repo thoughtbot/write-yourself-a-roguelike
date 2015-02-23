@@ -6,6 +6,8 @@ class RHack
   attr_reader :player
   include Curses
 
+  MESSAGES_FILE = "data/messages.yaml"
+
   def self.run
     new.run
   end
@@ -23,13 +25,27 @@ class RHack
     end
   end
 
+  def messages(key, replacements = {})
+    @messages ||= load_messages
+    message = @messages[key]
+    replacements.reduce(message) do |message, (key, value)|
+      message.gsub("%#{key}", value)
+    end
+  end
+
   private
 
   def with_curses
     init_screen
+    noecho
     yield
   ensure
     close_screen
   end
-end
 
+  def load_messages
+    YAML.load_file(MESSAGES_FILE).each_with_object({}) do |(key, message), hash|
+      hash[key.to_sym] = message
+    end
+  end
+end

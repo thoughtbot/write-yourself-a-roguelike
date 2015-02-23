@@ -1,49 +1,121 @@
 ---
 Archeologist:
-  lawful: "Quetzalcoatl"
-  neutral: "Camaxtli"
-  chaotic: "Huhetotl"
+  lawful:
+    name: "Quetzalcoatl"
+    gender: "m"
+  neutral:
+    name: "Camaxtli"
+    gender: "m"
+  chaotic:
+    name: "Huhetotl"
+    gender: "m"
 Barbarian:
-  lawful: "Mitra"
-  neutral: "Crom"
-  chaotic: "Set"
+  lawful:
+    name: "Mitra"
+    gender: "m"
+  neutral:
+    name: "Crom"
+    gender: "m"
+  chaotic:
+    name: "Set"
+    gender: "m"
 Caveman:
-  lawful: "Anu"
-  neutral: "Ishtar"
-  chaotic: "Anshar"
+  lawful:
+    name: "Anu"
+    gender: "m"
+  neutral:
+    name: "Ishtar"
+    gender: "f"
+  chaotic:
+    name: "Anshar"
+    gender: "m"
 Healer:
-  lawful: "Athena"
-  neutral: "Hermes"
-  chaotic: "Poseidon"
+  lawful:
+    name: "Athena"
+    gender: "f"
+  neutral:
+    name: "Hermes"
+    gender: "m"
+  chaotic:
+    name: "Poseidon"
+    gender: "m"
 Knight:
-  lawful: "Lugh"
-  neutral: "Brigit"
-  chaotic: "Manannan Mac Lir"
+  lawful:
+    name: "Lugh"
+    gender: "m"
+  neutral:
+    name: "Brigit"
+    gender: "f"
+  chaotic:
+    name: "Manannan Mac Lir"
+    gender: "f"
 Monk:
-  lawful: "Shan Lai Ching"
-  neutral: "Chih Sung-tzu"
-  chaotic: "Huan Ti"
+  lawful:
+    name: "Shan Lai Ching"
+    gender: "m"
+  neutral:
+    name: "Chih Sung-tzu"
+    gender: "m"
+  chaotic:
+    name: "Huan Ti"
+    gender: "m"
 Ranger:
-  lawful: "Mercury"
-  neutral: "Venus"
-  chaotic: "Mars"
+  lawful:
+    name: "Mercury"
+    gender: "m"
+  neutral:
+    name: "Venus"
+    gender: "f"
+  chaotic:
+    name: "Mars"
+    gender: "m"
 Rogue:
-  lawful: "Issek"
-  neutral: "Mog"
-  chaotic: "Kos"
+  lawful:
+    name: "Issek"
+    gender: "m"
+  neutral:
+    name: "Mog"
+    gender: "m"
+  chaotic:
+    name: "Kos"
+    gender: "m"
 Samurai:
-  lawful: "Amaterasu Omikami"
-  neutral: "Raijin"
-  chaotic: "Susanowo"
+  lawful:
+    name: "Amaterasu Omikami"
+    gender: "f"
+  neutral:
+    name: "Raijin"
+    gender: "m"
+  chaotic:
+    name: "Susanowo"
+    gender: "m"
 Tourist:
-  lawful: "Blind Io"
-  neutral: "The Lady"
-  chaotic: "Offler"
+  lawful:
+    name: "Blind Io"
+    gender: "m"
+  neutral:
+    name: "The Lady"
+    gender: "f"
+  chaotic:
+    name: "Offler"
+    gender: "m"
 Valkyrie:
-  lawful: "Tyr"
-  neutral: "Odin"
-  chaotic: "Loki"
+  lawful:
+    name: "Tyr"
+    gender: "m"
+  neutral:
+    name: "Odin"
+    gender: "m"
+  chaotic:
+    name: "Loki"
+    gender: "m"
 Wizard:
-  lawful: "Ptah"
-  neutral: "Thoth"
-  chaotic: "Anhur"
+  lawful:
+    name: "Ptah"
+    gender: "m"
+  neutral:
+    name: "Thoth"
+    gender: "m"
+  chaotic:
+    name: "Anhur"
+    gender: "m"
