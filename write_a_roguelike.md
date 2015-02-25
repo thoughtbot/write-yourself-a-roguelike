@@ -14,6 +14,7 @@ If you are reading this book, then bets are you already know what a roguelike is
 In this vein, we will design our roguelike to be akin to the game NetHack. NetHack is an ASCII based roguelike originally released in 1987, but it is currently still being further developed. As we build our roguelike, we will continously reference NetHack for both implementation and inspiration.
 
 ## Creating a Character
+### Starting with Ncurses - The Title Screen
 
 There's a lot of information that goes in to creating a character. From a top level, our character will have a role, race, gender, and alignment. The role determines which pantheon of gods will be active during the game. Our role and race combined will determine our starting stats (strength, dexterity, intelligence, wisdom, constitution, charisma, hit points, and energy) as well as how our stats change when we level up. Gender is simply for preferred pronoun usage and alignment determines which god in our pantheon is the one we worship (or choose not to worship).
 
@@ -69,7 +70,11 @@ Now when you run the program again you will see a blank screen and upon pressing
       close_screen
     end
 
-If you run the program now, it will look very much like the initial NetHack screen. As an added bonus the `q` key already works correctly, but then again every key quits. Let's start working on character details. From the initial NetHack screen, if you press `n` you will see this screen:
+If you run the program now, it will look very much like the initial NetHack screen. As an added bonus the `q` key already works correctly, but then again every key quits. Let's start working on character details.
+
+### Picking a Role
+
+From the initial NetHack screen, if you press `n` you will see this screen:
 
 ->![selection](images/selection.png =600x)<-
 
@@ -137,7 +142,31 @@ This YAML file will make it very easy to extend our role definitions to include 
 
 Here we introduce `clear` which will completely clear the entire screen. After that we simply iterate through all the role options. Before we go too far down the rabbit hole, let's start refactoring what we have into object-oriented code
 
+### Picking a Race
+### Picking a Gender
+### Picking an Alignment
+### Setting Character Stats
+
+ 
+
 ## Creating the Dungeon
+### Generating random rooms
+### Moving around
+### Creating Stairwells
+### Doors
+### Vision
+### Color
+### Pets
+
+
+## The Environment
+### Random Monsters
+### Combat
+### Increasing Difficulty
+### Items
+### Food and Hunger
+
+
 
 
     
