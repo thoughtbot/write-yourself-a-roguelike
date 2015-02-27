@@ -106,11 +106,6 @@ class Dungeon
   MAXRECT = 50
   attr_reader :rooms, :x_maze_max, :y_maze_max, :rect_cnt, :rect, :locations, :smeq, :nrooms, :doorindex, :doors
 
-  def debug_print_rooms
-    puts "-" * 80
-    puts @rooms[0..@nrooms+2]
-  end
-
   def initialize
     @doorindex = 0
     @doors = Array.new(DOORMAX) { Coord.init }
@@ -188,12 +183,12 @@ class Dungeon
 
   def makecorridors
     any = true
-    0.upto(nrooms-1) do |a|
+    0.upto(nrooms-2) do |a|
       join(a, a+1, false)
       break if rand(50) == 0
     end
 
-    0.upto(nrooms-2) do |a|
+    0.upto(nrooms-3) do |a|
       if smeq[a] != smeq[a+2]
         join(a, a+2, false)
       end
@@ -202,7 +197,7 @@ class Dungeon
     a = 0
     while any && a < nrooms
       any = false
-      0.upto(nrooms) do |b|
+      0.upto(nrooms-1) do |b|
         if smeq[a] != smeq[b]
           join(a, b, false)
           any = true
@@ -425,7 +420,7 @@ class Dungeon
     end
 
     if isok(x, y-1)
-      typ = locations[x][y-1]
+      typ = locations[x][y-1].typ
       if is_door(typ) || typ == SDOOR
         return true
       end
@@ -722,7 +717,7 @@ class Dungeon
     end
 
     if hiy >= ROWNO - 1
-      hiu = ROWNO - 2
+      hiy = ROWNO - 2
     end
 
     #if(lit)
@@ -859,7 +854,7 @@ class Dungeon
     hx = r.hx
     hy = r.hy
     0.upto(rect_cnt - 1) do |i|
-      rectp = rect[0]
+      rectp = rect[i]
       if lx >= rectp.lx && ly >= rectp.ly && hx <= rectp.hx && hy <= rectp.hy
         return rectp
       end
