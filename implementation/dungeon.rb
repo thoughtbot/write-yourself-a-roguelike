@@ -1003,5 +1003,5 @@ end
 
 seed = ENV["SEED"] || Random::DEFAULT.seed
 srand(seed.to_i)
-puts "SEED: #{seed}"
+puts "SEED=#{seed}"
 Dungeon.new.generate

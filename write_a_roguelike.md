@@ -2,6 +2,8 @@
 
 ## Intro
 
+### What is a roguelike?
+
 You are about to embark on a journey. This journey will be plagued with orcs, gnomes, algorithms, data structures, and kittens. You, valiant developer, will be writing a Roguelike.
 
 If you are reading this book, then bets are you already know what a roguelike is. But let us pretend for a moment that you do not and briefly go over some ground rules:
@@ -11,7 +13,38 @@ If you are reading this book, then bets are you already know what a roguelike is
 * Tile-based maps
 * Permanent death
 
-In this vein, we will design our roguelike to be akin to the game NetHack. NetHack is an ASCII based roguelike originally released in 1987, but it is currently still being further developed. As we build our roguelike, we will continously reference NetHack for both implementation and inspiration.
+In this vein, we will design our roguelike to be akin to the game NetHack.
+
+### What is NetHack
+
+NetHack is an ASCII based roguelike originally released in 1987, but it is currently still being further developed. It runs on practically every platform from your computer to your mobile phone. It's called a roguelike because it borrows a lot from the game rogue which is very similar
+
+->![Rogue](images/rogue.png =600x)<-
+
+->![Nethack](images/nethack.png =600x)<-
+
+As we build our roguelike, we will continously reference NetHack for both implementation and inspiration.
+
+### What is Ncurses
+
+Ncurses stands for New Curses, it's a freeware reimplementation of the original curses library. Its purpose is to make managing screen state easier and more portable. If you've ever installed some flavor of linux on a computer you might have seen something like this:
+
+->![Ncurses example](images/ncurses-example.png =600x)<-
+
+This screen was created using ncurses. So why do **we** need Ncurses? After all, we're just writing a simple game. Using ruby let's try to do something simple like clearing the screen. If you're on OSX you might have written something like:
+
+
+    system("clear")
+
+Everything works great until you try to run this on Windows. On Windows we need to run:
+
+    system("CLS")
+    
+Now we'd need to run code to detect the OS. We'll need to import `rbconfig` and write some code to detect the OS and choose the correct code to run. We can avoid this by using Ncurses which will do all the heavy lifting for us.
+
+### Why write this book
+
+Game development was one of the things that first attracted me to developing software. I started in highschool with QBasic. Nowadays it's much harder to get started due to the complexities of graphical hardware and complex operating system interactions. There is a certain purity in an ASCII based game, there is very little overhead and very little math required to get started (but still very necessary as you will soon see). There is also a lot to be said about using one's imagination. Most games these days have taken that element away from me, I know what everything looks like because the game's artists have fleshed it all out. However, games like NetHack allow me to imagine what's going on and to in some ways weave my own story. Because I find playing games like NetHack I've found a lot of enjoyment in writing games like NetHack and I hope this book will help you share this journey.
 
 ## Creating a Character
 ### Starting with Ncurses - The Title Screen
@@ -72,7 +105,7 @@ Now when you run the program again you will see a blank screen and upon pressing
 
 If you run the program now, it will look very much like the initial NetHack screen. As an added bonus the `q` key already works correctly, but then again every key quits. Let's start working on character details.
 
-### Picking a Role
+### Picking a Role, Race, Gender, and Alignment
 
 From the initial NetHack screen, if you press `n` you will see this screen:
 
@@ -142,29 +175,34 @@ This YAML file will make it very easy to extend our role definitions to include 
 
 Here we introduce `clear` which will completely clear the entire screen. After that we simply iterate through all the role options. Before we go too far down the rabbit hole, let's start refactoring what we have into object-oriented code
 
-### Picking a Race
-### Picking a Gender
-### Picking an Alignment
-### Setting Character Stats
+
+### Character Stats
 
  
 
 ## Creating the Dungeon
 ### Generating random rooms
+### Generating Doors and Corridors
 ### Moving around
 ### Creating Stairwells
-### Doors
-### Vision
+### Vision and Lighting
 ### Color
-### Pets
 
 
-## The Environment
+## Gameplay
 ### Random Monsters
 ### Combat
-### Increasing Difficulty
+### Magic
 ### Items
 ### Food and Hunger
+### Searching, hidden doors and corridors
+### Saving and Loading
+### Increasing Difficulty
+
+## Possible Chapters
+### Questlines
+### Alternate Dungeon types
+### Blessings and Curses
 
 
 
