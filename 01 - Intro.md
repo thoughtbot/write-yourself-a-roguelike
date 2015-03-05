@@ -13,7 +13,7 @@ If you are reading this book, then bets are you already know what a roguelike is
 
 So where do these rules come from? Roguelike games get their rules and name from the game Rogue. Rogue was developed in the 1980s, but if you have ever played it, then it's clear that its influence has spread far and wide as evident in games like Dwarf Fortress (another personal favorite) or Diablo.
 
-->![Rogue](images/rogue.png?raw=true =600x)<-
+![Rogue](images/rogue.png?raw=true =600x)
 
 As far as gameplay goes, you play an adventurer who descends into a dungeon for loot and fame. There is a catch though. Until you make it to the final level and retrieve the Amulet of Yendor, you are unable to return to the previous level. If you retrieve the Amulet of Yendor and make it back to the surface then you journey home, sell all of your loot, and get admitted to the fighters guild.
 
@@ -27,7 +27,7 @@ Lastly, since we're using ASCII to communicate the game we're essentially dealin
 
 ### Chapter 2 - What is NetHack?
 
-->![Nethack](images/nethack.png?raw=true =600x)<-
+![Nethack](images/nethack.png?raw=true =600x)
 
 NetHack is an ASCII based roguelike originally released in 1987, but it is currently still being further developed. It is a sort of evolution from Rogue. You're still descending down through levels and levels of dungeons to retrieve the Amulet of Yendor, but your goal now is to escape the dungeon, ascend through the elemental planes until you get to the astral plane in which you offer the amulet to your assigned god and are granted demigodhood (never thought I'd type that word).
 
@@ -41,7 +41,7 @@ In order to make our roguelike we'll be using a few different tools. First off, 
 
 What is Ncurses you ask? Ncurses stands for New Curses, it's a freeware reimplementation of the original curses library. Its purpose is to make managing screen state easier and more portable. If you've ever installed some flavor of linux on a computer you might have seen something like this:
 
-->![Ncurses example](images/ncurses-example.png?raw=true =600x)<-
+![Ncurses example](images/ncurses-example.png?raw=true =600x)
 
 This screen was created using Ncurses. So why do **we** need Ncurses? After all, we're just writing a simple game. Using Ruby let's try to do something simple like clearing the screen. If you're on OSX you might have written something like:
 
