@@ -9,7 +9,7 @@ To begin our journey we'll first need to learn how to use the `curses` gem. If y
     
 Once that finishes installing, we'll continue by first examining the NetHack title screen.
 
-->![character selection](images/character.png =600x)<-
+->![character selection](images/character.png?raw=true =600x)<-
 
 We'll want our title screen to mimic the NetHack one. Let's dive into curses by first writing the simplest curses example we can come up with. We'll initialize curses, read a single character, and quit. To do that, create a file named `main.rb` and add the following:
 
@@ -88,7 +88,7 @@ TODO: verify this assumption
 
 The responsibility of our game class is really to handle all of our global state. You will find when writing most games that at some point you'll have an object that practically everything needs to know about (which is often referred to as the game state). We'll be storing and managing our game state in this class as we progress. 
 
-->![Rhack](images/rhack.png =600x)<-
+->![Rhack](images/rhack.png?raw=true =600x)<-
 
 If you run the program now, it will look very much like the initial NetHack screen. As an added bonus the `q` key already works correctly, but then again every key quits. Let's start working on character details.
 
@@ -108,13 +108,13 @@ After a player has made all of their choices, we'll need to calculate their char
 
 If we look at all the selection screens in NetHack you'll notice that they look mostly the same.
 
-->![selection](images/role.png =600x)<-
+->![selection](images/role.png?raw=true =600x)<-
 
-->![selection](images/race.png =600x)<-
+->![selection](images/race.png?raw=true =600x)<-
 
-->![selection](images/gender.png =600x)<-
+->![selection](images/gender.png?raw=true =600x)<-
 
-->![selection](images/alignment.png =600x)<-
+->![selection](images/alignment.png?raw=true =600x)<-
 
 We'll want to abstract this as much as possible to prevent duplication. This will require a lot of abstractions, but they will pay off greatly in the long run. Let's make some quick changes in `game.rb`:
 
