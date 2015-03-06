@@ -344,20 +344,27 @@ In this function we check to see if we need to randomly select an item. If we do
       items.sample
     end
 
-For now, `random?` simply checks if `randall` was set and `random_item` just chooses a random element form our items array. Now we can implement `render_screen`:
+For now, `random?` simply checks if `randall` was set and `random_item` just chooses a random element form our items array. Now we can implement `render_screen` and `instructions`:
 
     def render_screen
       ui.clear
       ui.message(0, 0, messages[:choosing])
-      ui.message(right_offset, 0, messages[:instructions])
+      ui.message(right_offset, 0, instructions)
       render_choices
       handle_choice prompt
+    end
+    
+    # instructions has been pulled out into it's own method for a reason
+    # you will see later
+    
+    def instructions 
+      messages[:instructions]
     end
     
 Here we clear the screen, display the message on the left - "Choosing Role", display the message on the right - "Pick the role of your character", display the choices, and then prompt and handle the player's selection. For convenience, I've pulled out `right_offset` into a method since we'll use it a few times:
 
     def right_offset
-      @right_offset ||= (messages[:instructions].length + 2) * -1
+      @right_offset ||= (instructions.length + 2) * -1
     end
     
 This method returns a negative number representing how far left from the right side we should be when printing the right half of our screen.  We'll need to update our `UI` class to handle negative numbers, but let's finish our `SelectionScreen` class first.
@@ -454,14 +461,106 @@ If you run the program and choose "n" for the first choice then you should see:
 
 ![role selection example](images/role_example.png?raw=true =600x)
 
-Choosing any role will print out the options again, but this time it will display the selected role as well. If you choose "y" at the title screen a random role will appear here.
+Choosing any role will print out the options again, but this time it will display the selected role as well. If you choose "y" at the title screen a random role will appear here. Now that we've laid down the framework for setting attributes it should be fairly easy to implement the remaining ones.
     
 
 ### Chapter 4 - Off to the races
 
 ![selection](images/race.png?raw=true =600x)
 
-Our race will determine which alignments we can choose as well as some starting stat bonuses. Your race will also determine your starting alignment. Dwarves are lawful, gnomes are neutral, elves and orcs are chaotic, and humans can be any alignment (but this might be restricted by the role chosen e.g. samurai are lawful). In terms of stats, dwarves are typically stronger, gnomes and elves are generally smarter, and humans are generally balanced across the stats.
+In our NetHack implementation, race will determine which alignments we can choose as well as some starting stat bonuses. Race will also determine your starting alignment. Dwarves are lawful, gnomes are neutral, elves and orcs are chaotic, and humans can be any alignment (but this may be restricted by the role chosen e.g. samurai are lawful). In terms of stats, dwarves are typically stronger, gnomes and elves are generally smarter, and humans are generally balanced across the stats.
+
+We'll start implementing race by creating a `data/races.yaml` file and filling it in with the following:
+
+    ---
+    - name: human
+      hotkey: h
+    - name: dwarf
+      hotkey: d
+    - name: gnome
+      hotkey: g
+    - name: orc
+      hotkey: o
+    - name: elf
+      hotkey: e
+      
+Now let's add a `race.rb` file for loading up our races:
+
+    class Race
+      def self.for_options(options)
+        role = options[:role]
+        
+        all.select { |race| role.races.include? race.hotkey
+      end
+      
+      def self.all
+        DataLoader.load_file("races").map do |data|
+          new(data)
+        end
+      end
+      
+      attr_reader :name, :hotkey
+      
+      def initialize(data)
+        data.each do |key, value|
+          instance_variable_set("@#{key}", value)
+        end
+      end
+      
+      def to_s
+        name
+      end
+    end
+    
+Here we wan't to limit the selectable races to those allowed by the role. We'll need to modify our existing `data/roles.yaml` to specify which races can be selected for each role. You'll want to add `races` as a key to each role like so
+
+    - name: Acheologist
+      hotkey: a
+      races: hdg
+      
+The race values for the roles are as follows: 
+ 
+* Archeologist: hdg
+* Barbarian: ho 
+* Caveman: hdg
+* Healer: hg
+* Knight: h
+* Monk: h
+* Priest: he
+* Rogue: ho
+* Ranger: hego
+* Samurai: h
+* Tourist: h
+* Valkyrie: hd
+* Wizard: hego
+
+In terms of data, we'll also need to add the `:choosing` and `:instructions` messages for `:race`. Open `data/messages.yaml` and add the following:
+
+    race
+      choosing: Choosing Race
+      instructions: Pick the race of your %role
+      
+We'll be using `%role` as a placeholder for the actual role text. In order to make this work, we'll need to change `instructions` in `selection_screen.rb` to:
+
+	def instructions
+      @instructions ||= interpolate(messages[:instructions])
+    end
+    
+and then add the `interpolate` method:
+
+    def interpolate(message)
+	  message.gsub(/%(\w+)/) { options[$1.to_sym] }
+    end
+
+To wrap this up we'll want to update the `attr_reader` in `role.rb` to include `:races`. Then we'll also need to change `ATTRIBUTES` in `game.rb` to include `Race` **after** `Role`. Finally add a `require` for `race` in `main.rb` before the `require` for `game`.
+
+Now when we run the program we can select the race after the role. However there is one small annoyance. When there is only one possible race, the game should select it for us. An easy way to solve this problem is to change `random?` in our selection_screen class to:
+
+    def random?
+      options[:randall] || items.length == 1
+    end
+    
+That way if there is only one element in the array, we'll randomly select it.
 
 ### Chapter 5 - 👫
 
@@ -469,11 +568,123 @@ Our race will determine which alignments we can choose as well as some starting 
 
 For our purposes, gender will determine which pronoun your character will be addressed with. In actual NetHack gender does affect some interactions in the game, but we won't be going that in depth with our implementation.
 
+We're going to follow the same pattern for genders as we did with roles and races. First create a `data/genders.yaml` file with the following:
+
+    ---
+    - name: male
+      hotkey: m
+    - name: female
+      hotkey: f
+      
+There are no restrictions on which gender you can choose so our `gender.rb` file will look like:
+
+    class Gender
+      def self.for_options(_)
+        DataLoader.load_file("genders").map do |data|
+          new(data)
+        end
+      end
+      
+      attr_reader :name, :hotkey
+      
+      def initialize(data)
+        data.each do |key, value|
+          instance_variable_set("@#{key}", value)
+        end
+      end
+      
+      def to_s
+        name
+      end
+    end
+    
+Then once again we'll need to change `data/messages.yaml` to include the `:gender` messages
+
+    gender:
+      choosing: Choosing Gender
+      instructions: Pick the gender of your %race %role
+      
+Finally you'll want to add `Gender` to the end of `ATTRIBUTES` in `game.rb` and add `gender` to the list of requires before `game`.
+
 ### Chapter 6 - Properly aligned
 
 ![selection](images/alignment.png?raw=true =600x)
 
-Finally, alignment determines how the actions you take in game will affect you. If you do things that contrast your alignment your god will be angry with you and the game will become more difficult.
+Now for the final attribute.  Alignment determines how the actions you take in game will affect you. If you do things that contrast your alignment your god will be angry with you and the game will become more difficult. 
+
+First let's follow suit and create a `data/alignments.yaml` file with the following:
+
+    ---
+    - name: lawful
+      hotkey: l
+    - name: neutral
+      hotkey: n
+    - name: chaotic
+      hotkey: c
+
+The alignments you are allowed to choose from depend on your race and role. If your role is anything other than human, your alignment is predetermined, whereas humans can choose any alignment available to the role. So for each race we need to add an `alignments` key to `data/races.yaml` with the following values:
+
+* Human: lnc
+* Dwarf: l
+* Gnome: n
+* Orc: c
+* Elf: c
+
+You'll need to do the same thing in `data/roles.yaml`:
+
+* Archeologist: ln
+* Barbarian: nc
+* Caveman ln
+* Healer: n
+* Knight: l
+* Monk: lnc
+* Priest: lnc
+* Rogue: c
+* Ranger: nc
+* Samurai: l
+* Tourist: n
+* Valkyrie: ln
+* Wizard: nc
+
+To finish off editing our data let's add the following to the end of `data/messages.yaml`:
+
+    alignment:
+      choosing: Choosing Alignment
+      instructions: Pick the alignment of your %gender %race %role
+
+Now since our available alignments depend on both our role and our race we'll need to create the following `alignment.rb`:
+
+    class Alignment
+      def self.for_options(options)
+        role = options[:role]
+        race = options[:race]
+        possible = role.alignments.chars & race.alignments.chars
+        
+        all.select { |alignment| possible.include? alignment.hotkey }
+      end
+      
+      def self.all
+        DataLoader.load_file("alignments").map do |yaml|
+          new(yaml)
+        end
+      end
+      
+      attr_reader :name, :hotkey
+      
+      def initialize(data)
+        data.each do |key, value|
+          instance_variable_set("@#{key}", value)
+        end
+      end
+      
+      def to_s
+        name
+      end
+    end
+
+Finally you'll want to add `Alignment` to the end of `ATTRIBUTES` in `game.rb`, add the appropriate require before requiring `game` in `main.rb`, and add `:alignments` as an `attr_reader` to `Role` and `Race`.
+
+Running the program now you should see it output all of chosen attributes.
 
 ### Chapter 7 - Generating Stats
 
