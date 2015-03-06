@@ -3,15 +3,15 @@
 ## Part 2 - Creating a Character
 ### Chapter 5 - The Title Screen
 
-To begin our journey we'll first need to learn how to use the `curses` gem. If you haven't already, begin by installing the gem via:
+To begin our journey, we'll first need to learn how to use the `curses` gem. If you haven't already, install the `curses` gem via:
 
     gem install curses
     
-Once that finishes installing, we'll continue by first examining the NetHack title screen because we'll want our title screen to mimic it.
+Once that finishes installing, we'll continue by examining the NetHack title screen. We'll want our title screen to mimic it.
 
 ![character selection](images/character.png?raw=true =600x)
 
-Let's start our game by first writing the simplest curses example we can come up with. We'll initialize curses, read a single character, and quit. To do that, create a file named `main.rb` and add the following:
+Let's start our game by writing the simplest curses example we can come up with. The program will initialize curses, read a single character, and then quit. To do this, create a file named `main.rb` and add the following:
 
     require "curses" # require the curses gem
     include Curses   # mixin curses
@@ -24,7 +24,7 @@ Let's start our game by first writing the simplest curses example we can come up
     
 If you run this program, you will see the terminal go black and upon pressing a character it will return back to normal.
 
-Now that we've got a simple curses example running let's work on our title screen. We're going to break our code up into three files. The first file we'll create is named `game.rb` and it will contain the following:
+Now that we've got a simple curses example running, let's work on our title screen. We're going to break our code up into three files. The first file we'll create is named `game.rb` and it should contain the following:
 
     class Game
       def initialize
@@ -75,7 +75,7 @@ Then create the file `ui.rb` with:
       end
     end
     
-Finally, change your main.rb to the following:
+Finally, change your `main.rb` to:
 
     $LOAD_PATH.unshift "." # makes requiring files easier
     
@@ -85,17 +85,17 @@ Finally, change your main.rb to the following:
     
     Game.new.run
     
-I've chosen to break the UI into its own class for a few reasons. First, in game development, it's easy to produce difficult to understand code. We want to avoid this by trying to employ the single-responsibility pattern as much as possible. Tangentally, if we wanted to replace our UI with a different implementation the isolation here makes doing so far easier.
+I've chosen to break the UI into its own class for a few reasons. First, in game development, it's easy to produce code that is difficult to understand. We want to avoid this by trying to employ the single-responsibility pattern as much as possible. Tangentally, if we decide to replace our UI implementation with a different one, the isolation here makes doing that far easier.
 
-TODO: verify the assumption below
+TODO: expand paragraph below
 
-The responsibility of our game class is really to manage all of our global state. When writing games, you will often have an object that many other objects need to know something about (which is often referred to as the game state). We'll be storing and managing our game state in this `Game` class.
-
-![Rhack](images/rhack.png?raw=true =600x)
+The responsibility of our `Game` class is to manage all of our global state and the execute the main run loop. 
 
 If you run the program now, it will look very much like the initial NetHack screen.
 
-Moving forward, we're going to want to show more than a title screen. Let's start prepairing for this by refactoring our current code into something more adaptable. Let's make some quick changes in `game.rb`:
+![Rhack](images/rhack.png?raw=true =600x)
+
+Moving forward, we're going to want to show more than a title screen. Let's start by refactoring our current code into something more adaptable. Refactor `game.rb` to the following:
 
     class Game
       def initialize
@@ -114,6 +114,10 @@ Moving forward, we're going to want to show more than a title screen. Let's star
 
       def title_screen
         TitleScreen.new(ui, options).render
+        quit?
+      end
+      
+      def quit?
         exit if options[:quit]
       end
     end
@@ -150,17 +154,17 @@ Now we'll create a `title_screen.rb` file with the following:
 
 TODO: Talk about in game options
 
-You can see here how we'll be using the `options` variable assigned in `game.rb`. This will store the selections the user makes during setup. We need to do this in order to communicate between the different screens about what has been chosen. If the user selects "q" we'll store that we need to quit, if they choose "y" then we'll randomly assign the rest of the attributes. In order to keep our application working you'll also need to add:
+You can see here how we'll be making use of the `options` variable created in `game.rb`. It will store the selections the user makes during setup. We need to do this in order to communicate between the different selection screens about what choices the player has made. If the user selects "q" we'll store that we need to quit, if they choose "y" then we'll randomly assign the rest of the attributes. In order to keep our application working you'll also need to add:
 
     require "title_screen"
 
-to `main.rb`. Now when you run the program you'll see what we've selected printed to the screen. For instance, if I select yes, I'll see the following:
+to `main.rb`. Now when running the program and choose an option you'll see set in the output that is printed. For instance, if I select yes, then I'll see the following:
 
     {:quit=>false, :randall=>true}
 
 ### Chapter 7 - Messages
 
-There are going to be a lot of messages in the game and I prefer to extact them out into a yaml file. This makes them far easier to change (or to internationalize) later. Let's start by creating a `data` directory. This directory will hold some yaml files that will contain in game text and other data. In that directory, let's create a file for holding our in-game messages. Name the file `messages.yaml` and Add the following to it:
+There are going to be a lot of in-game messages and to make things more fluid we should extact them into a yaml file. This makes them far easier to change (or to internationalize) later. Let's start by creating a `data` directory. This directory will hold some yaml files that will contain in game text and other data. In that directory, let's create a file for holding our in-game messages. Name the file `messages.yaml` and add the following to it:
 
     ---
     title:
@@ -168,7 +172,7 @@ There are going to be a lot of messages in the game and I prefer to extact them 
       by: by a daring developer
       pick_random: "Shall I pick a character's race, role, gender and alignment for you? [ynq]"
 
-We'll want to update our `TitleScreen` class to make use of these. In order to do that, we'll first need some way to load the yaml file. It's good idea to isolate external dependencies like YAML to a single location to make them easier to replace in the future. We took that approach with Curses by extracting out the UI into its own class. In this situation, we'll extract out a `DataLoader` class that knows how to load data for us. Create a `data_loader.rb` file with the following:
+Next, we'll want to update our `TitleScreen` class to make use of these messages. In order to do that, we'll first need some way to load the yaml file. In this situation, it's a good idea to isolate an external dependency like YAML in order to make it easier to replace or modify in the future. We took this exact approach with Curses by extracting the UI into its own class. Let's extract a `DataLoader` class that knows how to load our data for us. Create a `data_loader.rb` file with the following:
 
     class DataLoader
       def self.load_file(file)
@@ -177,6 +181,9 @@ We'll want to update our `TitleScreen` class to make use of these. In order to d
 
       def load_file(file)
         symbolize_keys YAML.load_file("data/#{file}.yaml")
+        
+        # of if you want to include active_support
+        # YAML.load_file("data/#{file}.yaml").deep_symbolize_keys
       end
 
       private
@@ -195,7 +202,7 @@ We'll want to update our `TitleScreen` class to make use of these. In order to d
       end
     end
 
-The reason behind `symbolize_keys` is that YAML will parse all the keys as strings and I prefer symbols for this. If you'd like you can add `ActiveSupport` as a dependency which implements `deep_symbolize_keys` on `Hash`, but I chose not to add such a large dependency to this project.
+The reason behind `symbolize_keys` is that YAML will parse all the keys as strings and I prefer symbols for this. Even though `ActiveSupport` has a similar method, we're going to leave it out because it won't work directly with arrays. Our implementation will symbolize the keys correctly for hashes or arrays even if they are nested.
 
 Now we'll create a global way to access these messages. Create a file called `messages.rb` with the following:
 
@@ -213,23 +220,23 @@ It's evident here that our Messages module knows nothing about the YAML backend,
 
     @messages = Message[:title]
 
-Make sure to add `:messages` to the `attr_reader` line and then change render to the following:
+Make sure to add `:messages` to the `attr_reader` line and then change `render` to the following:
 
-  ui.message(0, 0, messages[:name])
-  ui.message(7, 1, messages[:by])
-  handle_choice prompt
+    ui.message(0, 0, messages[:name])
+    ui.message(7, 1, messages[:by])
+    handle_choice prompt
 
 Now to finish up, add `require`s in `main.rb` for `yaml`, `data_loader`, and `messages`. When you run the program again it should still function like our previous implementation.
 
-### Chapter 8 - Setting the role
+### Chapter 8 - Role call
 
-For a game like NetHack, there's a lot of information that goes in to creating a character. From a top level, a character will have a role, race, gender, and alignment. Each of these traits will determine how a game session will play.
+For a game like NetHack, there is a lot of information that goes in to creating a character. From a top level, a character will have a role, race, gender and alignment. Each of these traits will determine how a game session will play.
 
-We'll start by allowing the player to choose their role. In NetHack these are the roles a player can select:
+We'll start by allowing the player to choose their role. In NetHack, these are the roles a player can select:
 
 ![selection](images/role.png?raw=true =600x)
 
-We'll be implementing all of these. Looking at this list, you should immediately be thinking "data." We're going to create another data file to hold information for our roles. To start we're just going to give each role a name and a hotkey. Create `data/roles.yaml` with the following:
+We will implement all of these. Looking at this list, "data" should immediately come to mind. We're going to create another data file to hold the information for our roles. To start with, we're going to give each role a `name` and a `hotkey`. Create `data/roles.yaml` with the following:
 
     ---
     - name: Acheologist
@@ -283,19 +290,151 @@ Now we're going to create a `Role` class that can load all of this data. Create 
 
 We're using for_options here to unify the interface across all of our characteristics, since race and alignment will be dependent on role. We'll see shortly why this abstraction makes sense.
 
-### Chapter 9 - Setting the race
+Now we're going to write a generic `SelectionScreen` class. It's job will be to print two messages and display a list of options that can be selected by a hotkey. Create the file `selection_screen.rb` with:
+
+    class SelectionScreen
+    end
+    
+Now let's add some methods one by one. First we'll add our `initialize` and some `attr_reader`s:
+
+    def initialize(attribute, ui, options)
+      @items = attribute.for_options(options)
+      
+      @ui = ui
+      @options = options
+      
+      @key = attribute.name.downcase.to_sym
+      @messages = Messages[key]
+    end
+    
+    private
+    
+    attr_reader :items, :ui, :options, :key, :messages
+    
+    
+When we create a our selection screen we'll call it from `game.rb` with:
+
+	SelectionScreen.new(Role, ui, options).render
+	
+So in this case, `attribute` will be the class `Role`. On the first line we fetch all the relevant roles by calling `for_options`. If you recall, `for_options` just reads the yaml file of roles and returns all of them. Next we assign the `ui` and `options` variables. Then, we determine a key that we'll use for a couple of things. If `Role` is our attribute, then we want `:role` to be our key. Finally, we grab a hash of messages related to our key (:role in this case).
+
+Now we'll implement our only public method `render`:
+
+    def render
+      if random?
+        options[key] = random_item
+      else
+        render_screen
+      end
+    end
+
+In this function we check to see if we need to randomly select an item. If we do we don't want to render the screen, so it simply sets the option and returns. Otherwise we'll render the screen. The implementation for `random?` and `random_item` look like this:
+	
+    def random?
+      options[:randall]
+    end
+    
+    def random_item
+      items.sample
+    end
+
+For now, `random?` simply checks if `randall` was set and `random_item` just chooses a random element form our items array. Now we can implement `render_screen`:
+
+    def render_screen
+      ui.clear
+      ui.message(0, 0, messages[:choosing])
+      ui.message(right_offset, 0, messages[:instructions])
+      render_choices
+      handle_choice prompt
+    end
+    
+Here we clear the screen, display the message on the left - "Choosing Role", display the message on the right - "Pick the role of your character", display the choices, and then prompt and handle the player's selection. For convenience, I've pulled out `right_offset` into a method since we'll use it a few times:
+
+    def right_offset
+      @right_offset ||= (messages[:instructions].length + 2) * -1
+    end
+    
+This method returns a negative number representing how far left from the right side we should be when printing the right half of our screen. 
+
+Now we'll write our method for rendering our choices
+
+    def render_choices
+      items.each_with_index do |item, index|
+        ui.message(right_offset, index + 2, "#{item.hotkey} - #{item}")
+      end
+      
+      ui.message(right_offset, items.length + 2, "* - Random")
+      ui.message(right_offset, items.length + 3, "q - Quit")
+    end
+    
+This function is relatively straight forward. We loop through each item and print out the hotkey and the name of the role (we're cheating here by not printing "a" or "an" in front of the name, but it's not really important). 
+
+Now let's implement `handle_choice` and `item_for_hotkey`:
+
+    def handle_choice(choice)
+      case choice
+      when "q" then options[:quit] = true
+      when "*" then options[key] = random_item
+      else options[key] = item_for_hotkey(choice)
+    end
+    
+    def item_for_hotkey(hotkey)
+      items.find { |item| item.hotkey == hotkey }
+    end
+    
+Here we have 3 choices. If the user presses "q" then we want to quit. If they press "*" then we want to randomly choose an item. If they press any other valid option we want to assign the corresponding role. 
+
+Finally let's implement `prompt` and `hotkeys`:
+
+    def prompt
+      ui.message(right_offset, items.length + 4, "(end)", hotkeys)
+    end
+    
+    def hotkeys
+      items.map(&:hotkey).join + "*q"
+    end
+    
+The `hotkeys` represent our valid choices, but we need to make sure to add "*" and "q" as valid hotkeys.
+
+Now we're ready to initialize this screen in `game.rb`. Add the following constant:
+
+    ATTRIBUTES = [Role]
+
+
+Then change the `run` function to look like this:
+
+	def run
+      title_screen
+      choose_attributes
+    end
+    
+And then add `choose_attributes` as a private method:
+
+    def choose_attributes
+      ATTRIBUTES.each do |attribute|
+        SelectionScreen.new(attribute, ui, options).render
+        quit?
+      end
+    end
+    
+If you run the program and choose "n" for the first choice then you should see:
+
+![role selection example](images/role_example.png?raw=true =600x)
+    
+
+### Chapter 9 - Off to the races
 
 ![selection](images/race.png?raw=true =600x)
 
 Our race will determine which alignments we can choose as well as some starting stat bonuses. Your race will also determine your starting alignment. Dwarves are lawful, gnomes are neutral, elves and orcs are chaotic, and humans can be any alignment (but this might be restricted by the role chosen e.g. samurai are lawful). In terms of stats, dwarves are typically stronger, gnomes and elves are generally smarter, and humans are generally balanced across the stats.
 
-### Chapter 10 - Setting the gender
+### Chapter 10 - 👫
 
 ![selection](images/gender.png?raw=true =600x)
 
 For our purposes, gender will determine which pronoun your character will be addressed with. In actual NetHack gender does affect some interactions in the game, but we won't be going that in depth with our implementation.
 
-### Chapter 11 - Setting alignment
+### Chapter 11 - Properly aligned
 
 ![selection](images/alignment.png?raw=true =600x)
 
