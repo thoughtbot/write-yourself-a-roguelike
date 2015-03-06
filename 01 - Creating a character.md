@@ -53,6 +53,7 @@ Then create the file `ui.rb` with:
       include Curses
       
       def initialize
+        noecho # do not print characters the user types
         init_screen
       end
       
@@ -101,7 +102,7 @@ Moving forward, we're going to want to show more than a title screen. Let's star
       def initialize
         @ui = UI.new
         @options = { quit: false, randall: false } # variable for options
-        at_exit { ui.close, p options } # See selected options at exit
+        at_exit { ui.close; p options } # See selected options at exit
       end
 
       def run
@@ -144,7 +145,7 @@ Now we'll create a `title_screen.rb` file with the following:
         ui.choice_prompt(0, 3, "Shall I pick a character's race, role, gender and alignment for you? [ynq]", "ynq")
       end
 
-      def handle_choice choice
+      def handle_choice(choice)
         case choice
         when "q" then options[:quit] = true
         when "y" then options[:randall] = true
@@ -181,9 +182,6 @@ Next, we'll want to update our `TitleScreen` class to make use of these messages
 
       def load_file(file)
         symbolize_keys YAML.load_file("data/#{file}.yaml")
-        
-        # of if you want to include active_support
-        # YAML.load_file("data/#{file}.yaml").deep_symbolize_keys
       end
 
       private
@@ -218,13 +216,21 @@ Now we'll create a global way to access these messages. Create a file called `me
 
 It's evident here that our Messages module knows nothing about the YAML backend, instead it simply asks our DataLoader to load the messages. Now that we have a way to get our messages let's change our `title_screen.rb` to make use of it. In initialize add the following:
 
-    @messages = Message[:title]
+    @messages = Messages[:title]
 
 Make sure to add `:messages` to the `attr_reader` line and then change `render` to the following:
 
-    ui.message(0, 0, messages[:name])
-    ui.message(7, 1, messages[:by])
-    handle_choice prompt
+    def render
+      ui.message(0, 0, messages[:name])
+      ui.message(7, 1, messages[:by])
+      handle_choice prompt
+    end
+    
+And change `prompt` to:
+
+    def prompt
+      ui.choice_prompt(0, 3, messages[:pick_random], "ynq")
+    end
 
 Now to finish up, add `require`s in `main.rb` for `yaml`, `data_loader`, and `messages`. When you run the program again it should still function like our previous implementation.
 
@@ -271,7 +277,7 @@ Now we're going to create a `Role` class that can load all of this data. Create 
     class Role
       def self.for_options(_)
         DataLoader.load_file("roles").map do |data|
-          Role.new(data)
+          new(data)
         end
       end
 
@@ -285,7 +291,7 @@ Now we're going to create a `Role` class that can load all of this data. Create 
 
       def to_s
         name
-      Since rend
+      end
     end
 
 We're using for_options here to unify the interface across all of our characteristics, since race and alignment will be dependent on role. We'll see shortly why this abstraction makes sense.
@@ -318,7 +324,7 @@ When we create a our selection screen we'll call it from `game.rb` with:
 	
 So in this case, `attribute` will be the class `Role`. On the first line we fetch all the relevant roles by calling `for_options`. If you recall, `for_options` just reads the yaml file of roles and returns all of them. Next we assign the `ui` and `options` variables. Then, we determine a key that we'll use for a couple of things. If `Role` is our attribute, then we want `:role` to be our key. Finally, we grab a hash of messages related to our key (:role in this case).
 
-Now we'll implement our only public method `render`:
+Now we'll implement our only **public** method `render` (make sure this goes above the `private` line):
 
     def render
       if random?
@@ -354,7 +360,7 @@ Here we clear the screen, display the message on the left - "Choosing Role", dis
       @right_offset ||= (messages[:instructions].length + 2) * -1
     end
     
-This method returns a negative number representing how far left from the right side we should be when printing the right half of our screen. 
+This method returns a negative number representing how far left from the right side we should be when printing the right half of our screen.  We'll need to update our `UI` class to handle negative numbers, but let's finish our `SelectionScreen` class first.
 
 Now we'll write our method for rendering our choices
 
@@ -417,9 +423,38 @@ And then add `choose_attributes` as a private method:
       end
     end
     
+There are a few things left to do in order to get this working. First, in `main.rb` add:
+
+    require "role"
+    require "selection_screen"
+    
+**Above** the `require "game"` line. Next, we'll need to modify our `UI` class to have a clear function. Curses provides this function, but it's private, so we'll need to add the following to `ui.rb`:
+
+    def clear
+      super # call curses's clear method
+    end
+    
+While we have the `ui.rb` file open we should handle our `right_offset` issue we described before. Change the implementation of `message` to the following:
+
+    def message(x, y, string)
+      x = x + cols if x < 0
+      y = y + lines if y < 0
+      
+      setpos(y, x)
+      addstr(string)
+    end
+    
+Finally, we'll need to add some messages to our `data/messages.yaml` file:
+
+    role:
+      choosing: Choosing Role
+      instructions: Pick a role for your character
+    
 If you run the program and choose "n" for the first choice then you should see:
 
 ![role selection example](images/role_example.png?raw=true =600x)
+
+Choosing any role will print out the options again, but this time it will display the selected role as well. If you choose "y" at the title screen a random role will appear here.
     
 
 ### Chapter 4 - Off to the races
