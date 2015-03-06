@@ -1,6 +1,6 @@
-## Part 1 - Intro (the boring stuff)
+## Intro - the boring stuff
 
-### Chapter 1 - What is a roguelike?
+### Chapter i - What is a roguelike?
 
 You are about to embark on a journey. This journey will be plagued with orcs, gnomes, algorithms, data structures, and kittens. You, valiant developer, will be writing a Roguelike.
 
@@ -25,7 +25,7 @@ Which brings us to the next rule... permanent death. This is the crux of a rogue
 
 Lastly, since we're using ASCII to communicate the game we're essentially dealing with tile-based gameplay. A character can move orthogonally and diagonally. This keeps interactions fairly straightforward, but it also means we're dealing strictly with 2-dimensional math (in most cases).
 
-### Chapter 2 - What is NetHack?
+### Chapter ii - What is NetHack?
 
 ![Nethack](images/nethack.png?raw=true =600x)
 
@@ -35,7 +35,7 @@ There are also a number of other aspects that make NetHack more interesting. The
 
 As we build our roguelike, we will continously reference NetHack for both implementation and inspiration. We can do this because NetHack is open source, and while the code-base is almost 30 years old, I've gone ahead and spent countless hours using lldb to figure out what's going on for you.
 
-### Chapter 3 - Tooling
+### Chapter iii - Tooling
 
 In order to make our roguelike we'll be using a few different tools. First off, we'll be using Ruby. I've chosen Ruby for this initial edition for a couple of reasons. First and foremost, I find Ruby to be fairly easy to understand and when I want to build something quickly it's my goto. Second, I feel like object-oriented programming lends itself fairly well for programming games. Lastly, it has Ncurses bindings available through the gem `curses`.
 
@@ -57,7 +57,7 @@ Now we'd need to run code to detect the OS. We'll need to import `rbconfig` and 
 We'll also be making heavy use of YAML. You could really use any data language you want (XML, JSON, etc.), but YAML seems to be a defacto choice for Ruby. We'll be using YAML to store the large amounts of data that is needed to write a game of this nature.
 
 
-### Chapter 4 - Why write this book?
+### Chapter iv - Why write this book?
 
 The reason I decided to write this book is because game development was one of the things that first attracted me to developing software. I started programming in highschool with QBasic. QBasic made it pretty easy to enter into a graphics mode and start drawing on the screen. It wasn't long before I had written a very primitive RPG. Nowadays, it's much harder to get started due to the complexities of graphical hardware and complex operating system interactions. Roguelikes allow us to simplfy things one again.
 

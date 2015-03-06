@@ -1,7 +1,7 @@
 # Write a Roguelike
 
-## Part 2 - Creating a Character
-### Chapter 5 - The Title Screen
+## Part 1 - Creating a Character
+### Chapter 1 - The Title Screen
 
 To begin our journey, we'll first need to learn how to use the `curses` gem. If you haven't already, install the `curses` gem via:
 
@@ -162,7 +162,7 @@ to `main.rb`. Now when running the program and choose an option you'll see set i
 
     {:quit=>false, :randall=>true}
 
-### Chapter 7 - Messages
+### Chapter 2 - Messages
 
 There are going to be a lot of in-game messages and to make things more fluid we should extact them into a yaml file. This makes them far easier to change (or to internationalize) later. Let's start by creating a `data` directory. This directory will hold some yaml files that will contain in game text and other data. In that directory, let's create a file for holding our in-game messages. Name the file `messages.yaml` and add the following to it:
 
@@ -228,7 +228,7 @@ Make sure to add `:messages` to the `attr_reader` line and then change `render` 
 
 Now to finish up, add `require`s in `main.rb` for `yaml`, `data_loader`, and `messages`. When you run the program again it should still function like our previous implementation.
 
-### Chapter 8 - Role call
+### Chapter 3 - Role call
 
 For a game like NetHack, there is a lot of information that goes in to creating a character. From a top level, a character will have a role, race, gender and alignment. Each of these traits will determine how a game session will play.
 
@@ -422,24 +422,24 @@ If you run the program and choose "n" for the first choice then you should see:
 ![role selection example](images/role_example.png?raw=true =600x)
     
 
-### Chapter 9 - Off to the races
+### Chapter 4 - Off to the races
 
 ![selection](images/race.png?raw=true =600x)
 
 Our race will determine which alignments we can choose as well as some starting stat bonuses. Your race will also determine your starting alignment. Dwarves are lawful, gnomes are neutral, elves and orcs are chaotic, and humans can be any alignment (but this might be restricted by the role chosen e.g. samurai are lawful). In terms of stats, dwarves are typically stronger, gnomes and elves are generally smarter, and humans are generally balanced across the stats.
 
-### Chapter 10 - 👫
+### Chapter 5 - 👫
 
 ![selection](images/gender.png?raw=true =600x)
 
 For our purposes, gender will determine which pronoun your character will be addressed with. In actual NetHack gender does affect some interactions in the game, but we won't be going that in depth with our implementation.
 
-### Chapter 11 - Properly aligned
+### Chapter 6 - Properly aligned
 
 ![selection](images/alignment.png?raw=true =600x)
 
 Finally, alignment determines how the actions you take in game will affect you. If you do things that contrast your alignment your god will be angry with you and the game will become more difficult.
 
-### Chapter 12 - Generating Stats
+### Chapter 7 - Generating Stats
 
 So once a player has chosen their role, race, gender, and alignment, we'll need to calculate their character's base stats. In NetHack you have stats for strength, wisdom, intellegence, dexterity, charisma, and constitution. We will allocate a total of 75 points to these stats. Based on a player's role, we'll allocate a specific amount of those points to each stat. The leftover points are then allocated randomly according to rules set by the player's selected role.
