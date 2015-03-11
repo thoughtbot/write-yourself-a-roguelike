@@ -6,7 +6,7 @@
 To begin our journey, we'll first need to learn how to use the `curses` gem. If you haven't already, install the `curses` gem via:
 
     gem install curses
-    
+
 Once that finishes installing, we'll continue by examining the NetHack title screen. We'll want our title screen to mimic it.
 
 ![character selection](images/character.png?raw=true =600x)
@@ -15,13 +15,13 @@ Let's start our game by writing the simplest curses example we can come up with.
 
     require "curses" # require the curses gem
     include Curses   # mixin curses
-    
+
     # The next three functions are provided by including the Curses module.
-    
+
     init_screen      # starts curses visual mode
     getch            # reads a single character from stdin
     close_screen     # closes the ncurses screen
-    
+
 If you run this program, you will see the terminal go black and upon pressing a character it will return back to normal.
 
 Now that we've got a simple curses example running, let's work on our title screen. We're going to break our code up into three files. The first file we'll create is named `game.rb` and it should contain the following:
@@ -31,32 +31,32 @@ Now that we've got a simple curses example running, let's work on our title scre
         @ui = UI.new
         at_exit { ui.close } # runs at program exit
       end
-      
+
       def run
         title_screen
       end
-      
+
       private
-      
+
       attr_reader :ui
-      
+
       def title_screen
         ui.message(0, 0, "Rhack, a NetHack clone")
         ui.message(7, 1, "by a daring developer")
         ui.choice_prompt(0, 3, "Shall I pick a character's race, role, gender and alignment for you? [ynq]", "ynq")
       end
     end
-    
+
 Then create the file `ui.rb` with:
 
     class UI
       include Curses
-      
+
       def initialize
         noecho # do not print characters the user types
         init_screen
       end
-      
+
       def close
         close_screen
       end
@@ -65,7 +65,7 @@ Then create the file `ui.rb` with:
         setpos(y, x) # positions the cursor - pay attention to the argument order here
         addstr(string) # prints a string at cursor position
       end
-      
+
       def choice_prompt(x, y, string, choices)
         message(x, y, string + " ")
 
@@ -75,22 +75,22 @@ Then create the file `ui.rb` with:
         end
       end
     end
-    
+
 Finally, change your `main.rb` to:
 
     $LOAD_PATH.unshift "." # makes requiring files easier
-    
+
     require "curses"
     require "ui"
     require "game"
-    
+
     Game.new.run
-    
+
 I've chosen to break the UI into its own class for a few reasons. First, in game development, it's easy to produce code that is difficult to understand. We want to avoid this by trying to employ the single-responsibility pattern as much as possible. Tangentally, if we decide to replace our UI implementation with a different one, the isolation here makes doing that far easier.
 
 TODO: expand paragraph below
 
-The responsibility of our `Game` class is to manage all of our global state and the execute the main run loop. 
+The responsibility of our `Game` class is to manage all of our global state and the execute the main run loop.
 
 If you run the program now, it will look very much like the initial NetHack screen.
 
@@ -117,7 +117,7 @@ Moving forward, we're going to want to show more than a title screen. Let's star
         TitleScreen.new(ui, options).render
         quit?
       end
-      
+
       def quit?
         exit if options[:quit]
       end
@@ -225,7 +225,7 @@ Make sure to add `:messages` to the `attr_reader` line and then change `render` 
       ui.message(7, 1, messages[:by])
       handle_choice prompt
     end
-    
+
 And change `prompt` to:
 
     def prompt
@@ -300,28 +300,28 @@ Now we're going to write a generic `SelectionScreen` class. It's job will be to 
 
     class SelectionScreen
     end
-    
+
 Now let's add some methods one by one. First we'll add our `initialize` and some `attr_reader`s:
 
     def initialize(trait, ui, options)
       @items = trait.for_options(options)
-      
+
       @ui = ui
       @options = options
-      
+
       @key = trait.name.downcase.to_sym
       @messages = Messages[key]
     end
-    
+
     private
-    
+
     attr_reader :items, :ui, :options, :key, :messages
-    
-    
+
+
 When we create a our selection screen we'll call it from `game.rb` with:
 
 	SelectionScreen.new(Role, ui, options).render
-	
+
 So in this case, `trait` will be the class `Role`. On the first line we fetch all the relevant roles by calling `for_options`. If you recall, `for_options` just reads the yaml file of roles and returns all of them. Next we assign the `ui` and `options` variables. Then, we determine a key that we'll use for a couple of things. If `Role` is our trait, then we want `:role` to be our key. Finally, we grab a hash of messages related to our key (:role in this case).
 
 Now we'll implement our only **public** method `render` (make sure this goes above the `private` line):
@@ -335,11 +335,11 @@ Now we'll implement our only **public** method `render` (make sure this goes abo
     end
 
 In this function we check to see if we need to randomly select an item. If we do we don't want to render the screen, so it simply sets the option and returns. Otherwise we'll render the screen. The implementation for `random?` and `random_item` look like this:
-	
+
     def random?
       options[:randall]
     end
-    
+
     def random_item
       items.sample
     end
@@ -353,20 +353,20 @@ For now, `random?` simply checks if `randall` was set and `random_item` just cho
       render_choices
       handle_choice prompt
     end
-    
+
     # instructions has been pulled out into it's own method for a reason
     # you will see later
-    
-    def instructions 
+
+    def instructions
       messages[:instructions]
     end
-    
+
 Here we clear the screen, display the message on the left - "Choosing Role", display the message on the right - "Pick the role of your character", display the choices, and then prompt and handle the player's selection. For convenience, I've pulled out `right_offset` into a method since we'll use it a few times:
 
     def right_offset
       @right_offset ||= (instructions.length + 2) * -1
     end
-    
+
 This method returns a negative number representing how far left from the right side we should be when printing the right half of our screen.  We'll need to update our `UI` class to handle negative numbers, but let's finish our `SelectionScreen` class first.
 
 Now we'll write our method for rendering our choices
@@ -375,12 +375,12 @@ Now we'll write our method for rendering our choices
       items.each_with_index do |item, index|
         ui.message(right_offset, index + 2, "#{item.hotkey} - #{item}")
       end
-      
+
       ui.message(right_offset, items.length + 2, "* - Random")
       ui.message(right_offset, items.length + 3, "q - Quit")
     end
-    
-This function is relatively straight forward. We loop through each item and print out the hotkey and the name of the role (we're cheating here by not printing "a" or "an" in front of the name, but it's not really important). 
+
+This function is relatively straight forward. We loop through each item and print out the hotkey and the name of the role (we're cheating here by not printing "a" or "an" in front of the name, but it's not really important).
 
 Now let's implement `handle_choice` and `item_for_hotkey`:
 
@@ -390,79 +390,82 @@ Now let's implement `handle_choice` and `item_for_hotkey`:
       when "*" then options[key] = random_item
       else options[key] = item_for_hotkey(choice)
     end
-    
+
     def item_for_hotkey(hotkey)
       items.find { |item| item.hotkey == hotkey }
     end
-    
-Here we have 3 choices. If the user presses "q" then we want to quit. If they press "*" then we want to randomly choose an item. If they press any other valid option we want to assign the corresponding role. 
+
+Here we have 3 choices. If the user presses "q" then we want to quit. If they press "*" then we want to randomly choose an item. If they press any other valid option we want to assign the corresponding role.
 
 Finally let's implement `prompt` and `hotkeys`:
 
     def prompt
       ui.message(right_offset, items.length + 4, "(end)", hotkeys)
     end
-    
+
     def hotkeys
       items.map(&:hotkey).join + "*q"
     end
-    
+
 The `hotkeys` represent our valid choices, but we need to make sure to add "*" and "q" as valid hotkeys.
 
 Now we're ready to initialize this screen in `game.rb`. Add the following constant:
 
     TRAITS = [Role]
 
-
 Then change the `run` function to look like this:
 
-	def run
+    def run
       title_screen
-      choose_traits
+      setup_character
     end
-    
-And then add `choose_traits` as a private method:
 
-    def choose_traits
+And then add `setup_character` and `get_traits` as a private methods:
+
+    def setup_character
+      get_traits
+    end
+
+    def get_traits
       TRAITS.each do |trait|
         SelectionScreen.new(trait, ui, options).render
         quit?
       end
     end
-    
+
 There are a few things left to do in order to get this working. First, in `main.rb` add:
 
     require "role"
     require "selection_screen"
-    
+
 **Above** the `require "game"` line. Next, we'll need to modify our `UI` class to have a clear function. Curses provides this function, but it's private, so we'll need to add the following to `ui.rb`:
 
     def clear
       super # call curses's clear method
     end
-    
+
 While we have the `ui.rb` file open we should handle our `right_offset` issue we described before. Change the implementation of `message` to the following:
 
     def message(x, y, string)
       x = x + cols if x < 0
       y = y + lines if y < 0
-      
+
       setpos(y, x)
       addstr(string)
     end
-    
+
 Finally, we'll need to add some messages to our `data/messages.yaml` file:
 
     role:
       choosing: Choosing Role
       instructions: Pick a role for your character
-    
+
 If you run the program and choose "n" for the first choice then you should see:
 
 ![role selection example](images/role_example.png?raw=true =600x)
 
 Choosing any role will print out the options again, but this time it will display the selected role as well. If you choose "y" at the title screen a random role will appear here. Now that we've laid down the framework for setting traits it should be fairly easy to implement the remaining ones.
-    
+
 
 ### Chapter 4 - Off to the races
 
@@ -483,45 +486,45 @@ We'll start implementing race by creating a `data/races.yaml` file and filling i
       hotkey: o
     - name: elf
       hotkey: e
-      
+
 Now let's add a `race.rb` file for loading up our races:
 
     class Race
       def self.for_options(options)
         role = options[:role]
-        
+
         all.select { |race| role.races.include? race.hotkey
       end
-      
+
       def self.all
         DataLoader.load_file("races").map do |data|
           new(data)
         end
       end
-      
+
       attr_reader :name, :hotkey
-      
+
       def initialize(data)
         data.each do |key, value|
           instance_variable_set("@#{key}", value)
         end
       end
-      
+
       def to_s
         name
       end
     end
-    
+
 Here we wan't to limit the selectable races to those allowed by the role. We'll need to modify our existing `data/roles.yaml` to specify which races can be selected for each role. You'll want to add `races` as a key to each role like so
 
     - name: Acheologist
       hotkey: a
       races: hdg
-      
-The race values for the roles are as follows: 
- 
+
+The race values for the roles are as follows:
+
 * Archeologist: hdg
-* Barbarian: ho 
+* Barbarian: ho
 * Caveman: hdg
 * Healer: hg
 * Knight: h
@@ -539,13 +542,13 @@ In terms of data, we'll also need to add the `:choosing` and `:instructions` mes
     race
       choosing: Choosing Race
       instructions: Pick the race of your %role
-      
+
 We'll be using `%role` as a placeholder for the actual role text. In order to make this work, we'll need to change `instructions` in `selection_screen.rb` to:
 
 	def instructions
       @instructions ||= interpolate(messages[:instructions])
     end
-    
+
 and then add the `interpolate` method:
 
     def interpolate(message)
@@ -559,7 +562,7 @@ Now when we run the program we can select the race after the role. However there
     def random?
       options[:randall] || items.length == 1
     end
-    
+
 That way if there is only one element in the array, we'll randomly select it.
 
 ### Chapter 5 - 👫
@@ -575,15 +578,15 @@ We're going to follow the same pattern for genders as we did with roles and race
       hotkey: m
     - name: female
       hotkey: f
-      
+
 Valkyries are the only role that cannot choose between both genders. All Valkyries are female. Rather than making an exception, we'll implement this in the same manner we handled race by specifying which gender you can choose in our role file. For each of the roles aside from Valkyrie add:
 
     genders: mf
-    
+
 For Valkyrie add:
 
     genders: f
-      
+
 Now add `:genders` to the list of `attr_reader`s in `role.rb` and create a `gender.rb` with the following:
 
     class Gender
@@ -591,39 +594,39 @@ Now add `:genders` to the list of `attr_reader`s in `role.rb` and create a `gend
         role = options[:role]
         all.select { |gender| role.genders.include? gender.hotkey }
       end
-      
+
       def self.all
         DataLoader.load_file("genders").map do |data|
           new(data)
         end
       end
-      
+
       attr_reader :name, :hotkey
-      
+
       def initialize(data)
         data.each do |key, value|
           instance_variable_set("@#{key}", value)
         end
       end
-      
+
       def to_s
         name
       end
     end
-    
+
 Then once again we'll need to change `data/messages.yaml` to include the `:gender` messages
 
     gender:
       choosing: Choosing Gender
       instructions: Pick the gender of your %race %role
-      
+
 Finally you'll want to add `Gender` to the end of `TRAITS` in `game.rb` and add `gender` to the list of requires before `game`.
 
 ### Chapter 6 - Properly aligned
 
 ![selection](images/alignment.png?raw=true =600x)
 
-Now for the final trait.  Alignment determines how the actions you take in game will affect you. If you do things that contrast your alignment your god will be angry with you and the game will become more difficult. 
+Now for the final trait.  Alignment determines how the actions you take in game will affect you. If you do things that contrast your alignment your god will be angry with you and the game will become more difficult.
 
 First let's follow suit and create a `data/alignments.yaml` file with the following:
 
@@ -672,24 +675,24 @@ Now since our available alignments depend on both our role and our race we'll ne
         role = options[:role]
         race = options[:race]
         possible = role.alignments.chars & race.alignments.chars
-        
+
         all.select { |alignment| possible.include? alignment.hotkey }
       end
-      
+
       def self.all
         DataLoader.load_file("alignments").map do |yaml|
           new(yaml)
         end
       end
-      
+
       attr_reader :name, :hotkey
-      
+
       def initialize(data)
         data.each do |key, value|
           instance_variable_set("@#{key}", value)
         end
       end
-      
+
       def to_s
         name
       end
@@ -707,7 +710,7 @@ Let's briefly go over each stat and how it should affect the game.
 
 Strength will determine how much weight we can handle in our inventory. It will also determine how much melee damage we do as well as how far we can throw things. In NetHack, there are a number of other things that strength affects but we will ignore those for the purpose of out implementation. For display, stength is a bit odd because for a value between 18 and 19 it is shown as a percentage. A value of 18/35 would mean that you are 35% of the way between 18 and 19.
 
-Dexterity will determine your chance of hitting monsters, either by melee combat, missles, or spells. 
+Dexterity will determine your chance of hitting monsters, either by melee combat, missles, or spells.
 
 Constitution increases your healing rate and also attributes to how much weight you can carry. This is useful for roles with low strength like Tourist.
 
@@ -930,3 +933,107 @@ With the role abilities set we now need to distribute the remaining points. In o
         dexterity: 20
         constitution: 20
         charisma: 10
+
+Now we're ready to create a player class. Add `player.rb` with the following:
+
+    class Player
+      attr_reader :role, :race, :gender, :alignment
+
+      def initialize(options)
+        @role = options[:role]
+        @race = options[:race]
+        @gender = options[:gender]
+        @alignment = options[:alignment]
+
+        @attributes = AttributeGenerator.new(role).attributes
+      end
+    end
+
+And now for the `AttributeGenerator`. With the `AttributeGenerator` we need to make sure we distribute the points according to the probabilities we've defined in our `roles.yaml` file. One way to solve this problem is to generate a number between 0 and 99 and then for each attribute subtract the probability from that number. Once we are less than or equal to zero we choose that attribute. In essence what we're doing is mapping the attributes on a number line and then randomly choosing a number from that line. Whichever attribute our number falls in is the one we want:
+
+                                                                 x = 62
+    |strength||intelligence                ||wisdom  ||dexterity         ||constitution      ||charisma|
+    1                                                                                                  100
+
+In the example above if x was 62 the attribute we'd increment would be dexterity. Now we can implement the `AttributeGenerator` according to this algorithm:
+
+    class AttributeGenerator
+      def initialize(role, total = 75)
+        @role = role
+        @base_attributes = role.starting_attributes.dup
+        @total = total
+      end
+
+      def attributes
+        @attributes ||= assign_remaining_points
+      end
+
+      private
+
+      attr_reader :role, :base_attributes, :total
+
+      def remaining_points
+        total - base_attributes.values.reduce(:+)
+      end
+
+      def assign_remaining_points
+        remaining_points.times do
+          increment_random_attribute
+        end
+      end
+
+      def increment_random_attribute
+        base_attributes[next_random_attribute] += 1
+      end
+
+      def next_random_attribute
+        x = rand(100)
+
+        base_attributes.keys.find do |key|
+          (x -= role.attribute_possibilities[key]) <= 0
+        end
+      end
+    end
+
+Now in `game.rb` we can instantiate our player:
+
+    def setup_character
+      get_traits
+      options[:player] = Player.new(options)
+      %i(role race gender alignment).each { |key| options.delete(key) }
+    end
+
+Now for the last set of attributes we'll want to assign hitpoints and power. These operate a little differently because you need to store the current amount you have as well as your maximum. Hitpoints are determined by adding together your role's hitpoints and your race's hitpoints. Your power is determined by adding your role's power plus some random number (usually zero) and your race's power. In `roles.yaml` and `races.yaml` add `hitpoints` and `power` and `rand_power` according to the following charts:
+
+                 hitpoints  power  rand_power
+    Acheologist  11         1      0
+    Barbarian    14         1      0
+    Caveman      14         1      0
+    Healer       11         1      4
+    Knight       14         1      4
+    Monk         12         2      2
+    Priest       12         4      3
+    Rogue        10         1      0
+    Ranger       13         1      0
+    Samurai      13         1      0
+    Tourist      8          1      0
+    Valkyrie     14         1      0
+    Wizard       10         4      3
+
+
+           hitpoints  power
+    Human  2          1
+    Dwarf  4          0
+    Gnome  1          2
+    Orc    1          1
+    Elf    1          2
+
+
+Once you've added `attr_accessor`s for `hitpoints` and `power` in both `Role` and `Race` as well as `rand_power` in `Race` you just have to add the following to your `Player` `initialize` method:
+
+    @hitpoints = role.hitpoints + race.hitpoints
+    @max_hitpoints = hitpoints
+    @power = role.power + rand(role.rand_power) + race.power
+    @max_power = power
+    
+And then add `attr_accessors` for `hitpoints`, `max_hitpoints`, `power`, and `max_power`.
