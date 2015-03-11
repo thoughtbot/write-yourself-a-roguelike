@@ -155,7 +155,7 @@ Now we'll create a `title_screen.rb` file with the following:
 
 TODO: Talk about in game options
 
-You can see here how we'll be making use of the `options` variable created in `game.rb`. It will store the selections the user makes during setup. We need to do this in order to communicate between the different selection screens about what choices the player has made. If the user selects "q" we'll store that we need to quit, if they choose "y" then we'll randomly assign the rest of the attributes. In order to keep our application working you'll also need to add:
+You can see here how we'll be making use of the `options` variable created in `game.rb`. It will store the selections the user makes during setup. We need to do this in order to communicate between the different selection screens about what choices the player has made. If the user selects "q" we'll store that we need to quit, if they choose "y" then we'll randomly assign the rest of the traits. In order to keep our application working you'll also need to add:
 
     require "title_screen"
 
@@ -303,13 +303,13 @@ Now we're going to write a generic `SelectionScreen` class. It's job will be to 
     
 Now let's add some methods one by one. First we'll add our `initialize` and some `attr_reader`s:
 
-    def initialize(attribute, ui, options)
-      @items = attribute.for_options(options)
+    def initialize(trait, ui, options)
+      @items = trait.for_options(options)
       
       @ui = ui
       @options = options
       
-      @key = attribute.name.downcase.to_sym
+      @key = trait.name.downcase.to_sym
       @messages = Messages[key]
     end
     
@@ -322,7 +322,7 @@ When we create a our selection screen we'll call it from `game.rb` with:
 
 	SelectionScreen.new(Role, ui, options).render
 	
-So in this case, `attribute` will be the class `Role`. On the first line we fetch all the relevant roles by calling `for_options`. If you recall, `for_options` just reads the yaml file of roles and returns all of them. Next we assign the `ui` and `options` variables. Then, we determine a key that we'll use for a couple of things. If `Role` is our attribute, then we want `:role` to be our key. Finally, we grab a hash of messages related to our key (:role in this case).
+So in this case, `trait` will be the class `Role`. On the first line we fetch all the relevant roles by calling `for_options`. If you recall, `for_options` just reads the yaml file of roles and returns all of them. Next we assign the `ui` and `options` variables. Then, we determine a key that we'll use for a couple of things. If `Role` is our trait, then we want `:role` to be our key. Finally, we grab a hash of messages related to our key (:role in this case).
 
 Now we'll implement our only **public** method `render` (make sure this goes above the `private` line):
 
@@ -411,21 +411,21 @@ The `hotkeys` represent our valid choices, but we need to make sure to add "*" a
 
 Now we're ready to initialize this screen in `game.rb`. Add the following constant:
 
-    ATTRIBUTES = [Role]
+    TRAITS = [Role]
 
 
 Then change the `run` function to look like this:
 
 	def run
       title_screen
-      choose_attributes
+      choose_traits
     end
     
-And then add `choose_attributes` as a private method:
+And then add `choose_traits` as a private method:
 
-    def choose_attributes
-      ATTRIBUTES.each do |attribute|
-        SelectionScreen.new(attribute, ui, options).render
+    def choose_traits
+      TRAITS.each do |trait|
+        SelectionScreen.new(trait, ui, options).render
         quit?
       end
     end
@@ -461,7 +461,7 @@ If you run the program and choose "n" for the first choice then you should see:
 
 ![role selection example](images/role_example.png?raw=true =600x)
 
-Choosing any role will print out the options again, but this time it will display the selected role as well. If you choose "y" at the title screen a random role will appear here. Now that we've laid down the framework for setting attributes it should be fairly easy to implement the remaining ones.
+Choosing any role will print out the options again, but this time it will display the selected role as well. If you choose "y" at the title screen a random role will appear here. Now that we've laid down the framework for setting traits it should be fairly easy to implement the remaining ones.
     
 
 ### Chapter 4 - Off to the races
@@ -552,7 +552,7 @@ and then add the `interpolate` method:
 	  message.gsub(/%(\w+)/) { options[$1.to_sym] }
     end
 
-To wrap this up we'll want to update the `attr_reader` in `role.rb` to include `:races`. Then we'll also need to change `ATTRIBUTES` in `game.rb` to include `Race` **after** `Role`. Finally add a `require` for `race` in `main.rb` before the `require` for `game`.
+To wrap this up we'll want to update the `attr_reader` in `role.rb` to include `:races`. Then we'll also need to change `TRAITS` in `game.rb` to include `Race` **after** `Role`. Finally add a `require` for `race` in `main.rb` before the `require` for `game`.
 
 Now when we run the program we can select the race after the role. However there is one small annoyance. When there is only one possible race, the game should select it for us. An easy way to solve this problem is to change `random?` in our selection_screen class to:
 
@@ -576,10 +576,23 @@ We're going to follow the same pattern for genders as we did with roles and race
     - name: female
       hotkey: f
       
-There are no restrictions on which gender you can choose so our `gender.rb` file will look like:
+Valkyries are the only role that cannot choose between both genders. All Valkyries are female. Rather than making an exception, we'll implement this in the same manner we handled race by specifying which gender you can choose in our role file. For each of the roles aside from Valkyrie add:
+
+    genders: mf
+    
+For Valkyrie add:
+
+    genders: f
+      
+Now add `:genders` to the list of `attr_reader`s in `role.rb` and create a `gender.rb` with the following:
 
     class Gender
-      def self.for_options(_)
+      def self.for_options(options)
+        role = options[:role]
+        all.select { |gender| role.genders.include? gender.hotkey }
+      end
+      
+      def self.all
         DataLoader.load_file("genders").map do |data|
           new(data)
         end
@@ -604,13 +617,13 @@ Then once again we'll need to change `data/messages.yaml` to include the `:gende
       choosing: Choosing Gender
       instructions: Pick the gender of your %race %role
       
-Finally you'll want to add `Gender` to the end of `ATTRIBUTES` in `game.rb` and add `gender` to the list of requires before `game`.
+Finally you'll want to add `Gender` to the end of `TRAITS` in `game.rb` and add `gender` to the list of requires before `game`.
 
 ### Chapter 6 - Properly aligned
 
 ![selection](images/alignment.png?raw=true =600x)
 
-Now for the final attribute.  Alignment determines how the actions you take in game will affect you. If you do things that contrast your alignment your god will be angry with you and the game will become more difficult. 
+Now for the final trait.  Alignment determines how the actions you take in game will affect you. If you do things that contrast your alignment your god will be angry with you and the game will become more difficult. 
 
 First let's follow suit and create a `data/alignments.yaml` file with the following:
 
@@ -682,10 +695,238 @@ Now since our available alignments depend on both our role and our race we'll ne
       end
     end
 
-Finally you'll want to add `Alignment` to the end of `ATTRIBUTES` in `game.rb`, add the appropriate require before requiring `game` in `main.rb`, and add `:alignments` as an `attr_reader` to `Role` and `Race`.
+Finally you'll want to add `Alignment` to the end of `TRAITS` in `game.rb`, add the appropriate require before requiring `game` in `main.rb`, and add `:alignments` as an `attr_reader` to `Role` and `Race`.
 
-Running the program now you should see it output all of chosen attributes.
+Running the program now you should see it output all of chosen traits.
 
-### Chapter 7 - Generating Stats
+### Chapter 7 - Generating Abilities
 
-So once a player has chosen their role, race, gender, and alignment, we'll need to calculate their character's base stats. In NetHack you have stats for strength, wisdom, intellegence, dexterity, charisma, and constitution. We will allocate a total of 75 points to these stats. Based on a player's role, we'll allocate a specific amount of those points to each stat. The leftover points are then allocated randomly according to rules set by the player's selected role.
+So once a player has chosen their role, race, gender, and alignment, we'll need to calculate their character's base abilities. In NetHack you have values, ranging between 3 and 25, for strength, wisdom, intelligence, dexterity, charisma, and constitution. We will allocate a total of 75 points to these abilities. Based on a player's role, we'll allocate a specific amount of those points to each ability. The leftover points are then allocated randomly according to rules set by the player's selected role.
+
+Let's briefly go over each stat and how it should affect the game.
+
+Strength will determine how much weight we can handle in our inventory. It will also determine how much melee damage we do as well as how far we can throw things. In NetHack, there are a number of other things that strength affects but we will ignore those for the purpose of out implementation. For display, stength is a bit odd because for a value between 18 and 19 it is shown as a percentage. A value of 18/35 would mean that you are 35% of the way between 18 and 19.
+
+Dexterity will determine your chance of hitting monsters, either by melee combat, missles, or spells. 
+
+Constitution increases your healing rate and also attributes to how much weight you can carry. This is useful for roles with low strength like Tourist.
+
+Intelligence is used for reading books and spellcasting for roles other than healers, knights, monks, priests, and valkyries.
+
+Wisdom is used for spellcasting for healers, knights, monks, priests, and valkyries. It also determines how fast your power regenerates and how much power you gain when levelling up.
+
+Charisma is used for getting better prices in shops.
+
+Now for each role there's a specific assignment of points. Let's modify our `data/roles.yaml` to contain the following starting attributes (the name has been included to make it easier to know where to put the attributes):
+
+    - name: Archeologist
+      starting_attributes:
+        strength: 7
+        intelligence: 10
+        wisdom: 10
+        dexterity: 7
+        constitution: 7
+        charisma: 7
+    - name: Barbarian
+      starting_attributes:
+        strength: 16
+        intelligence: 7
+        wisdom: 7
+        dexterity: 15
+        constitution: 16
+        charisma: 6
+    - name: Caveman
+      starting_attributes:
+        strength: 10
+        intelligence: 7
+        wisdom: 7
+        dexterity: 7
+        constitution: 8
+        charisma: 6
+    - name: Healer
+      starting_attributes:
+        strength: 7
+        intelligence: 7
+        wisdom: 13
+        dexterity: 7
+        constitution: 11
+        charisma: 16
+    - name: Knight
+      starting_attributes:
+        strength: 13
+        intelligence: 7
+        wisdom: 14
+        dexterity: 8
+        constitution: 10
+        charisma: 17
+    - name: Monk
+      starting_attributes:
+        strength: 10
+        intelligence: 7
+        wisdom: 8
+        dexterity: 8
+        constitution: 7
+        charisma: 7
+    - name: Priest
+      starting_attributes:
+        strength: 7
+        intelligence: 7
+        wisdom: 10
+        dexterity: 7
+        constitution: 7
+        charisma: 7
+    - name: Rogue
+      starting_attributes:
+        strength: 7
+        intelligence: 7
+        wisdom: 7
+        dexterity: 10
+        constitution: 7
+        charisma: 6
+    - name: Ranger
+      starting_attributes:
+        strength: 13
+        intelligence: 13
+        wisdom: 13
+        dexterity: 9
+        constitution: 13
+        charisma: 7
+    - name: Samurai
+      starting_attributes:
+        strength: 10
+        intelligence: 8
+        wisdom: 7
+        dexterity: 10
+        constitution: 17
+        charisma: 6
+    - name: Tourist
+      starting_attributes:
+        strength: 7
+        intelligence: 10
+        wisdom: 6
+        dexterity: 7
+        constitution: 7
+        charisma: 10
+    - name: Valkyrie
+      starting_attributes:
+        strength: 10
+        intelligence: 7
+        wisdom: 7
+        dexterity: 7
+        constitution: 10
+        charisma: 7
+    - name: Wizard
+      starting_attributes:
+        strength: 7
+        intelligence: 10
+        wisdom: 7
+        dexterity: 7
+        constitution: 7
+        charisma: 7
+
+With the role abilities set we now need to distribute the remaining points. In order to do this we'll need to define for each role the probability that a point will be assigned to that ability. This is different for each class, so for each role we'll add the correct probability - much like we did with the `starting_attributes`. Here are the probabilities you should add to `data/roles.yaml` (again the name has been listed for convenience):
+
+    - name: Archeologist
+      attribute_probabilities:
+        strength: 20
+        intelligence: 20
+        wisdom: 20
+        dexterity: 10
+        constitution: 20
+        charisma: 10
+    - name: Barbarian
+      attribute_probabilities:
+        strength: 30
+        intelligence: 6
+        wisdom: 7
+        dexterity: 20
+        constitution: 30
+        charisma: 7
+    - name: Caveman
+      attribute_probabilities:
+        strength: 30
+        intelligence: 6
+        wisdom: 7
+        dexterity: 20
+        constitution: 30
+        charisma: 7
+    - name: Healer
+      attribute_probabilities:
+        strength: 15
+        intelligence: 20
+        wisdom: 20
+        dexterity: 15
+        constitution: 25
+        charisma: 5
+    - name: Knight
+      attribute_probabilities:
+        strength: 30
+        intelligence: 15
+        wisdom: 15
+        dexterity: 10
+        constitution: 20
+        charisma: 10
+    - name: Monk
+      attribute_probabilities:
+        strength: 25
+        intelligence: 10
+        wisdom: 20
+        dexterity: 20
+        constitution: 15
+        charisma: 10
+    - name: Priest
+      attribute_probabilities:
+        strength: 15
+        intelligence: 10
+        wisdom: 30
+        dexterity: 15
+        constitution: 20
+        charisma: 10
+    - name: Rogue
+      attribute_probabilities:
+        strength: 20
+        intelligence: 10
+        wisdom: 10
+        dexterity: 30
+        constitution: 20
+        charisma: 10
+    - name: Ranger
+      attribute_probabilities:
+        strength: 30
+        intelligence: 10
+        wisdom: 10
+        dexterity: 20
+        constitution: 20
+        charisma: 10
+    - name: Samurai
+      attribute_probabilities:
+        strength: 30
+        intelligence: 10
+        wisdom: 8
+        dexterity: 30
+        constitution: 14
+        charisma: 8
+    - name: Tourist
+      attribute_probabilities:
+        strength: 15
+        intelligence: 10
+        wisdom: 10
+        dexterity: 15
+        constitution: 30
+        charisma: 20
+    - name: Valkyrie
+      attribute_probabilities:
+        strength: 30
+        intelligence: 6
+        wisdom: 7
+        dexterity: 20
+        constitution: 30
+        charisma: 7
+    - name: Wizard
+      attribute_probabilities:
+        strength: 10
+        intelligence: 30
+        wisdom: 10
+        dexterity: 20
+        constitution: 20
+        charisma: 10

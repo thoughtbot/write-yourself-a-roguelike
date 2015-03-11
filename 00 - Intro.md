@@ -4,26 +4,26 @@
 
 You are about to embark on a journey. This journey will be plagued with orcs, gnomes, algorithms, data structures, and kittens. You, valiant developer, will be writing a Roguelike.
 
-If you are reading this book, then bets are you already know what a roguelike is. But let us pretend for a moment that you do not and briefly go over some ground rules:
+If you are reading this book, then bets are you already know what a roguelike is, but let's go over some quick ground rules for what a roguelike should have:
 
 * Proceduraly generated environments
 * Turn-based gameplay
 * Permanent death
 * Tile-based maps
 
-So where do these rules come from? Roguelike games get their rules and name from the game Rogue. Rogue was developed in the 1980s, but if you have ever played it, then it's clear that its influence has spread far and wide as evident in games like Dwarf Fortress (another personal favorite) or Diablo.
+So where do these rules come from? Roguelike games get their rules and name from the game Rogue. Rogue was developed in the 1980s, but if you have ever played it, then it's clear that its influence has spread far and wide as evident in games like Dwarf Fortress or Diablo.
 
 ![Rogue](images/rogue.png?raw=true =600x)
 
-As far as gameplay goes, you play an adventurer who descends into a dungeon for loot and fame. There is a catch though. Until you make it to the final level and retrieve the Amulet of Yendor, you are unable to return to the previous level. If you retrieve the Amulet of Yendor and make it back to the surface then you journey home, sell all of your loot, and get admitted to the fighters guild.
+In Rogue, you play as an adventurer who descends into a dungeon for loot and fame. There is a catch though. Until you make it to the final level and retrieve the Amulet of Yendor, you are unable to return to the previous level. If you retrieve the Amulet of Yendor and make it back to the surface then you journey home, sell all of your loot, and get admitted to the fighters guild. Huzzah!
 
-Now back to the rules because they are important for what we are trying to accomplish. A huge part of writing a good roguelike is the procedurally generated environments. These can be anything from dungeons to full worlds. The importance of the procedurally generated environments is replayability. You're unlikely to have a similar gaming experience between plays. It creates an incentive to play over and over. Our roguelike wouldn't be very fun if every time you played all the dungeons were the same.
+Now, let's get  back to the rules because they are important for the task at hand. A huge part of writing a good roguelike is the procedurally generated environments. These can be anything from dungeons to entire worlds. The importance of the procedurally generated environments is replayability. You're unlikely to have a similar gaming experience between plays. It creates an incentive to play over and over. Our roguelike will be far more exciting if one time you play you put on cursed boots and starve to death because you can't reach the floor and the next time you get assaulted by a feral kitten early in the game.
 
-In terms of gameplay, we'll be dealing with turn-based game play. As the player, you'll issue a single command and the entire world state will tick a single turn. This method of play creates great situations where you know you're in serious trouble, but have time to plan the next best move. It can become very tense when you've put a lot into your character and you're on the verge of dying.
+An important part of a roguelike game is having to think very hard about your next move. Quick! You're about to die! Do you pray, do you write "Elbereth" on the ground hopping the never ending assult of ants will leave your pitiful tourist alone! Each keypress could be your last. For this reason most roguelikes are turn-based. As the player, you'll issue a single command and the entire world will update. This gives you a chance to examine all the changes and carefully plan how you'll deal with the situation at hand.
 
-Which brings us to the next rule... permanent death. This is the crux of a roguelike. If you die, you lose everything and have to start over. This means your choices have serious consequences and you can not just revert back to a save. This makes success very rewarding and failure very frustrating. Do you read scroll that could destroy your armor making you defenseless, but also could detect food you so desperately need?
+Which brings us to the next rule... permanent death! This is the crux of a roguelike. If you die, you lose EVERYTHING and have to start over. All your hard work! That amazing wand you found! All gone! This means your choices have serious consequences. This makes success very rewarding and failure very frustrating. Do you read scroll that could destroy your armor making you defenseless, but also could detect food you so desperately need? This tension is rarely found in games of other ilk.
 
-Lastly, since we're using ASCII to communicate the game we're essentially dealing with tile-based gameplay. A character can move orthogonally and diagonally. This keeps interactions fairly straightforward, but it also means we're dealing strictly with 2-dimensional math (in most cases).
+And now, for the final roguelike rule. Our entire world will be tile-based. A character can move orthogonally and diagonally between tiles. This perspective and the use of ASCII to represent our game will allow it to run in terminals all across the world.
 
 ### Chapter ii - What is NetHack?
 
