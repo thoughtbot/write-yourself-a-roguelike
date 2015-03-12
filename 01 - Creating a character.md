@@ -276,6 +276,10 @@ Now we're going to create a `Role` class that can load all of this data. Create 
 
     class Role
       def self.for_options(_)
+      	all
+      end
+      
+      def self.all
         DataLoader.load_file("roles").map do |data|
           new(data)
         end
@@ -539,7 +543,7 @@ The race values for the roles are as follows:
 
 In terms of data, we'll also need to add the `:choosing` and `:instructions` messages for `:race`. Open `data/messages.yaml` and add the following:
 
-    race
+    race:
       choosing: Choosing Race
       instructions: Pick the race of your %role
 
@@ -680,8 +684,8 @@ Now since our available alignments depend on both our role and our race we'll ne
       end
 
       def self.all
-        DataLoader.load_file("alignments").map do |yaml|
-          new(yaml)
+        DataLoader.load_file("alignments").map do |data|
+          new(data)
         end
       end
 
@@ -720,9 +724,13 @@ Wisdom is used for spellcasting for healers, knights, monks, priests, and valkyr
 
 Charisma is used for getting better prices in shops.
 
-Now for each role there's a specific assignment of points. Let's modify our `data/roles.yaml` to contain the following starting attributes (the name has been included to make it easier to know where to put the attributes):
+Now for each role there's a specific assignment of points. We're going to add starting attributes to `data/roles.yaml` an entry would look something like this:
 
     - name: Archeologist
+      hotkey: a
+      races: hdg
+      genders: mf
+      alignments: ln
       starting_attributes:
         strength: 7
         intelligence: 10
@@ -730,106 +738,39 @@ Now for each role there's a specific assignment of points. Let's modify our `dat
         dexterity: 7
         constitution: 7
         charisma: 7
-    - name: Barbarian
-      starting_attributes:
-        strength: 16
-        intelligence: 7
-        wisdom: 7
-        dexterity: 15
-        constitution: 16
-        charisma: 6
-    - name: Caveman
-      starting_attributes:
-        strength: 10
-        intelligence: 7
-        wisdom: 7
-        dexterity: 7
-        constitution: 8
-        charisma: 6
-    - name: Healer
-      starting_attributes:
-        strength: 7
-        intelligence: 7
-        wisdom: 13
-        dexterity: 7
-        constitution: 11
-        charisma: 16
-    - name: Knight
-      starting_attributes:
-        strength: 13
-        intelligence: 7
-        wisdom: 14
-        dexterity: 8
-        constitution: 10
-        charisma: 17
-    - name: Monk
-      starting_attributes:
-        strength: 10
-        intelligence: 7
-        wisdom: 8
-        dexterity: 8
-        constitution: 7
-        charisma: 7
-    - name: Priest
+ 
+Add all the starting attributes according to this chart:
+
+                  strength  intelligence  wisdom  dexterity  constitution  charisma
+    Archeologist  7         10            10      7          7             7
+    Barbarian     16        7             7       15         16            6
+    Caveman       10        7             7       7          8             6
+    Healer        7         7             13      7          11            16
+    Knight        13        7             14      8          10            17
+    Monk          10        7             8       8          7             7
+    Priest        7         7             10      7          7             7
+    Rogue         7         7             7       10         7             6
+    Ranger        13        13            13      9          13            7
+    Samurai       10        8             7       10         17            6
+    Tourist       7         10            6       7          7             10
+    Valkyrie      10        7             7       7          10            7
+    Wizard        7         10            7       7          7             7
+    
+
+With the role abilities set we now need to distribute the remaining points. In order to do this we'll need to define for each role the probability that a point will be assigned to that ability. This is different for each class, so for each role we'll add the correct probability - much like we did with the `starting_attributes`. Here is what an entry with attribute probabilities should look like:
+
+    - name: Archeologist
+      hotkey: a
+      races: hdg
+      genders: mf
+      alignments: ln
       starting_attributes:
         strength: 7
-        intelligence: 7
+        intelligence: 10
         wisdom: 10
         dexterity: 7
         constitution: 7
         charisma: 7
-    - name: Rogue
-      starting_attributes:
-        strength: 7
-        intelligence: 7
-        wisdom: 7
-        dexterity: 10
-        constitution: 7
-        charisma: 6
-    - name: Ranger
-      starting_attributes:
-        strength: 13
-        intelligence: 13
-        wisdom: 13
-        dexterity: 9
-        constitution: 13
-        charisma: 7
-    - name: Samurai
-      starting_attributes:
-        strength: 10
-        intelligence: 8
-        wisdom: 7
-        dexterity: 10
-        constitution: 17
-        charisma: 6
-    - name: Tourist
-      starting_attributes:
-        strength: 7
-        intelligence: 10
-        wisdom: 6
-        dexterity: 7
-        constitution: 7
-        charisma: 10
-    - name: Valkyrie
-      starting_attributes:
-        strength: 10
-        intelligence: 7
-        wisdom: 7
-        dexterity: 7
-        constitution: 10
-        charisma: 7
-    - name: Wizard
-      starting_attributes:
-        strength: 7
-        intelligence: 10
-        wisdom: 7
-        dexterity: 7
-        constitution: 7
-        charisma: 7
-
-With the role abilities set we now need to distribute the remaining points. In order to do this we'll need to define for each role the probability that a point will be assigned to that ability. This is different for each class, so for each role we'll add the correct probability - much like we did with the `starting_attributes`. Here are the probabilities you should add to `data/roles.yaml` (again the name has been listed for convenience):
-
-    - name: Archeologist
       attribute_probabilities:
         strength: 20
         intelligence: 20
@@ -837,102 +778,23 @@ With the role abilities set we now need to distribute the remaining points. In o
         dexterity: 10
         constitution: 20
         charisma: 10
-    - name: Barbarian
-      attribute_probabilities:
-        strength: 30
-        intelligence: 6
-        wisdom: 7
-        dexterity: 20
-        constitution: 30
-        charisma: 7
-    - name: Caveman
-      attribute_probabilities:
-        strength: 30
-        intelligence: 6
-        wisdom: 7
-        dexterity: 20
-        constitution: 30
-        charisma: 7
-    - name: Healer
-      attribute_probabilities:
-        strength: 15
-        intelligence: 20
-        wisdom: 20
-        dexterity: 15
-        constitution: 25
-        charisma: 5
-    - name: Knight
-      attribute_probabilities:
-        strength: 30
-        intelligence: 15
-        wisdom: 15
-        dexterity: 10
-        constitution: 20
-        charisma: 10
-    - name: Monk
-      attribute_probabilities:
-        strength: 25
-        intelligence: 10
-        wisdom: 20
-        dexterity: 20
-        constitution: 15
-        charisma: 10
-    - name: Priest
-      attribute_probabilities:
-        strength: 15
-        intelligence: 10
-        wisdom: 30
-        dexterity: 15
-        constitution: 20
-        charisma: 10
-    - name: Rogue
-      attribute_probabilities:
-        strength: 20
-        intelligence: 10
-        wisdom: 10
-        dexterity: 30
-        constitution: 20
-        charisma: 10
-    - name: Ranger
-      attribute_probabilities:
-        strength: 30
-        intelligence: 10
-        wisdom: 10
-        dexterity: 20
-        constitution: 20
-        charisma: 10
-    - name: Samurai
-      attribute_probabilities:
-        strength: 30
-        intelligence: 10
-        wisdom: 8
-        dexterity: 30
-        constitution: 14
-        charisma: 8
-    - name: Tourist
-      attribute_probabilities:
-        strength: 15
-        intelligence: 10
-        wisdom: 10
-        dexterity: 15
-        constitution: 30
-        charisma: 20
-    - name: Valkyrie
-      attribute_probabilities:
-        strength: 30
-        intelligence: 6
-        wisdom: 7
-        dexterity: 20
-        constitution: 30
-        charisma: 7
-    - name: Wizard
-      attribute_probabilities:
-        strength: 10
-        intelligence: 30
-        wisdom: 10
-        dexterity: 20
-        constitution: 20
-        charisma: 10
+        
+Add all the attribute probabilities in `data/roles.yaml` according to the following chart:
+
+                  strength  intelligence  wisdom  dexterity  constitution  charisma
+    Archeologist  20%       20%           20%     10%        20%           10%
+    Barbarian     30%       6%            7%      20%        30%           7%
+    Caveman       30%       6%            7%      20%        30%           7%
+    Healer        15%       20%           20%     15%        25%           5%
+    Knight        30%       15%           15%     10%        20%           10%
+    Monk          25%       10%           20%     20%        15%           10%
+    Priest        15%       10%           30%     15%        20%           10%
+    Rogue         20%       10%           10%     30%        20%           10%
+    Ranger        30%       10%           10%     20%        20%           10%
+    Samurai       30%       10%           8%      30%        14%           8%
+    Tourist       15%       10%           10%     15%        30%           20%
+    Valkyrie      30%       6%            7%      20%        30%           7%
+    Wizard        10%       30%           10%     20%        20%           10%
 
 Now we're ready to create a player class. Add `player.rb` with the following:
 
@@ -1020,6 +882,7 @@ Now for the last set of attributes we'll want to assign hitpoints and power. The
     Valkyrie     14         1      0
     Wizard       10         4      3
 
+***
 
            hitpoints  power
     Human  2          1
