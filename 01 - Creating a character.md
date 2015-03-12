@@ -757,27 +757,15 @@ Add all the starting attributes according to this chart:
     Wizard        7         10            7       7          7             7
     
 
-With the role abilities set we now need to distribute the remaining points. In order to do this we'll need to define for each role the probability that a point will be assigned to that ability. This is different for each class, so for each role we'll add the correct probability - much like we did with the `starting_attributes`. Here is what an entry with attribute probabilities should look like:
+With the role abilities set we now need to distribute the remaining points. In order to do this we'll need to define for each role the probability that a point will be assigned to that ability. This is different for each class, so for each role we'll add the correct probability - much like we did with the `starting_attributes`. Here is an example of what you'd add after `starting_probabilities`:
 
-    - name: Archeologist
-      hotkey: a
-      races: hdg
-      genders: mf
-      alignments: ln
-      starting_attributes:
-        strength: 7
-        intelligence: 10
-        wisdom: 10
-        dexterity: 7
-        constitution: 7
-        charisma: 7
-      attribute_probabilities:
-        strength: 20
-        intelligence: 20
-        wisdom: 20
-        dexterity: 10
-        constitution: 20
-        charisma: 10
+    attribute_probabilities:
+      strength: 20
+      intelligence: 20
+      wisdom: 20
+      dexterity: 10
+      constitution: 20
+      charisma: 10
         
 Add all the attribute probabilities in `data/roles.yaml` according to the following chart:
 
@@ -799,7 +787,7 @@ Add all the attribute probabilities in `data/roles.yaml` according to the follow
 Now we're ready to create a player class. Add `player.rb` with the following:
 
     class Player
-      attr_reader :role, :race, :gender, :alignment
+      attr_reader :role, :race, :gender, :alignment, :attributes
 
       def initialize(options)
         @role = options[:role]
@@ -842,6 +830,8 @@ In the example above if x was 62 the attribute we'd increment would be dexterity
         remaining_points.times do
           increment_random_attribute
         end
+        
+        base_attributes
       end
 
       def increment_random_attribute
@@ -852,17 +842,22 @@ In the example above if x was 62 the attribute we'd increment would be dexterity
         x = rand(100)
 
         base_attributes.keys.find do |key|
-          (x -= role.attribute_possibilities[key]) <= 0
+          (x -= role.attribute_probabilities[key]) <= 0
         end
       end
     end
 
-Now in `game.rb` we can instantiate our player:
+Make sure you have `:starting_attributes` and `attribute_probabilities` as `attr_readers` in `Role`. Also add `require`s for `Player` and `AttributeGenerator` to `main.rb`. Now in `game.rb` we can instantiate our player:
 
     def setup_character
       get_traits
-      options[:player] = Player.new(options)
-      %i(role race gender alignment).each { |key| options.delete(key) }
+      options[:player] = make_player
+    end
+    
+    def make_player  
+      Player.new(options).tap do
+        %i(role race gender alignment).each { |key| options.delete(key) }
+      end
     end
 
 Now for the last set of attributes we'll want to assign hitpoints and power. These operate a little differently because you need to store the current amount you have as well as your maximum. Hitpoints are determined by adding together your role's hitpoints and your race's hitpoints. Your power is determined by adding your role's power plus some random number (usually zero) and your race's power. In `roles.yaml` and `races.yaml` add `hitpoints` and `power` and `rand_power` according to the following charts:
@@ -896,7 +891,7 @@ Once you've added `attr_accessor`s for `hitpoints` and `power` in both `Role` an
 
     @hitpoints = role.hitpoints + race.hitpoints
     @max_hitpoints = hitpoints
-    @power = role.power + rand(role.rand_power) + race.power
+    @power = role.power + rand(role.rand_power + 1) + race.power
     @max_power = power
     
-And then add `attr_accessors` for `hitpoints`, `max_hitpoints`, `power`, and `max_power`.
+And then add `attr_accessors` for `hitpoints`, `max_hitpoints`, `power`, and `max_power`. There are plenty of other things we could add to our characters at this point, but this is enough to move us onward to the challenge of procedurally generated dungeons.
