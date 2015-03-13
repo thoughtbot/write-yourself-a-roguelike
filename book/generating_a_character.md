@@ -1,5 +1,3 @@
-# Write a Roguelike
-
 ## Part 1 - Creating a Character
 ### Chapter 1 - The Title Screen
 

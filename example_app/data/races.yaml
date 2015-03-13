@@ -1,0 +1,26 @@
+---
+- name: human
+  hotkey: h
+  alignments: lnc
+  hitpoints: 2
+  power: 1
+- name: dwarf
+  hotkey: d
+  alignments: l
+  hitpoints: 4
+  power: 0
+- name: gnome
+  hotkey: g
+  alignments: n
+  hitpoints: 1
+  power: 2
+- name: orc
+  hotkey: o
+  alignments: c
+  hitpoints: 1
+  power: 1
+- name: elf
+  hotkey: e
+  alignments: c
+  hitpoints: 1
+  power: 2

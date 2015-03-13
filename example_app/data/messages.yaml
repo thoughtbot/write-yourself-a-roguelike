@@ -1,0 +1,17 @@
+---
+title:
+  name: Rhack, a NetHack clone
+  by: by a daring developer
+  pick_random: "Shall I pick a character's race, role, gender and alignment for you? [ynq]"
+role:
+  choosing: Choosing Role
+  instructions: Pick a role for your character
+race:
+  choosing: Choosing Race
+  instructions: Pick the race of your %role
+gender:
+  choosing: Choosing Gender
+  instructions: Pick the gender of your %race %role
+alignment:
+  choosing: Choosing Alignment
+  instructions: Pick the alignment of your %gender %race %role

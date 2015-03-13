@@ -1,0 +1,5 @@
+---
+- name: male
+  hotkey: m
+- name: female
+  hotkey: f

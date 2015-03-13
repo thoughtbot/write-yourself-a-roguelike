@@ -1,0 +1,7 @@
+---
+- name: lawful
+  hotkey: l
+- name: neutral
+  hotkey: n
+- name: chaotic
+  hotkey: c
