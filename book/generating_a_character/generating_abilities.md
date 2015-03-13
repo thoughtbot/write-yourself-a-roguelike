@@ -98,11 +98,9 @@ end
 
 And now for the `AttributeGenerator`. With the `AttributeGenerator` we need to make sure we distribute the points according to the probabilities we've defined in our `roles.yaml` file. One way to solve this problem is to generate a number between 0 and 99 and then for each attribute subtract the probability from that number. Once we are less than or equal to zero we choose that attribute. In essence what we're doing is mapping the attributes on a number line and then randomly choosing a number from that line. Whichever attribute our number falls in is the one we want:
 
-                                                                 x = 62
-    |strength||intelligence                ||wisdom  ||dexterity         ||constitution      ||charisma|
-    1                                                                                                  100
+![Attribute Assignment Example](images/attribute_assignment.png)
 
-In the example above if x was 62 the attribute we'd increment would be dexterity. Now we can implement the `AttributeGenerator` according to this algorithm:
+Now we can implement the `AttributeGenerator` according to this algorithm:
 
 ```ruby
 class AttributeGenerator
