@@ -1,5 +1,4 @@
-## Part 2 - Creating the Dungeon
-### Chapter 8 - Generating random rooms
+## Chapter 8 - Generating random rooms
 
 Generating random rooms is one of the most complicated and interesting parts of writing a roguelike. You want each level of a dungeon to feel unique. At the same time, you want it to feel very random.
 
@@ -33,9 +32,3 @@ An algorithm in Ruby, might looks something like this.
     end
 
 So as you can see it simply checks the 4 conditions we've specified using `>` and `<`. Now that we know how to check if two rectangles overlap, let's discuss how we'll apply this. A fairly naive program would generate a random rectangle and if it didn't intersect any other rectangles we'd place it in the room. Rinse and repeat for the desired number of rooms. 
-
-### Chapter 9 - Generating Doors and Corridors
-### Chapter 10 - Moving around
-### Chapter 11 - Creating Stairwells
-### Chapter 12 - Vision and Lighting
-### Chapter 13 - Color
