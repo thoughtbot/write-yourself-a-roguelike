@@ -43,7 +43,8 @@ class Game
   def title_screen
     ui.message(0, 0, "Rhack, a NetHack clone")
     ui.message(7, 1, "by a daring developer")
-    ui.choice_prompt(0, 3, "Shall I pick a character's race, role, gender and alignment for you? [ynq]", "ynq")
+    ui.choice_prompt(0, 3, "Shall I pick a character's race, role, gender and " + 
+      "alignment for you? [ynq]", "ynq")
   end
 end
 ```
@@ -148,7 +149,8 @@ class TitleScreen
   attr_reader :ui, :options
 
   def prompt
-    ui.choice_prompt(0, 3, "Shall I pick a character's race, role, gender and alignment for you? [ynq]", "ynq")
+    ui.choice_prompt(0, 3, "Shall I pick a character's race, role, gender and " + 
+      "alignment for you? [ynq]", "ynq")
   end
 
   def handle_choice(choice)
