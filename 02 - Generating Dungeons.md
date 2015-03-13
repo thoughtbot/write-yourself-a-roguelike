@@ -21,7 +21,7 @@ The usage or rectangles simplifies a lot of equations for us. For one, it's very
 3. The left side of triangle A is to the left side of the right side of triangle B
 4. The right side of triangle A is to the right side of the left side of triangle B
 
-![Axis Aligned Bounding Boxes](images/aabbs.png =600x)
+![Axis Aligned Bounding Boxes](images/aabbs.png?raw=true =600x)
 
 An algorithm in Ruby, might looks something like this.
 
