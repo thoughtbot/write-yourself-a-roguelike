@@ -61,7 +61,12 @@ It's evident here that our Messages module knows nothing about the YAML backend,
 @messages = Messages[:title]
 ```
 
-Make sure to add `:messages` to the `attr_reader` line and then change `render` to the following:
+Make sure to add `:messages` to the `attr_reader` line, like so:
+```ruby
+    attr_reader :ui, :options, :messages
+```
+
+and then change `render` to the following:
 
 ```ruby
 def render
