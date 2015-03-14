@@ -65,7 +65,8 @@ class UI
   end
 
   def message(x, y, string)
-    setpos(y, x) # positions the cursor - pay attention to the argument order here
+    # positions the cursor - notice the order of the arguments!
+    setpos(y, x)
     addstr(string) # prints a string at cursor position
   end
 
