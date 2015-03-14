@@ -53,7 +53,7 @@ end
 Here we wan't to limit the selectable races to those allowed by the role. We'll need to modify our existing `data/roles.yaml` to specify which races can be selected for each role. You'll want to add `races` as a key to each role like so
 
 ```yaml
-- name: Acheologist
+- name: Archeologist
   hotkey: a
   races: hdg
 ```
