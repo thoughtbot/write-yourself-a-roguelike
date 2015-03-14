@@ -190,7 +190,7 @@ Finally let's implement `prompt` and `hotkeys`:
 
 ```ruby
 def prompt
-  ui.message(right_offset, items.length + 4, "(end)", hotkeys)
+  ui.choice_prompt(right_offset, items.length + 4, "(end)", hotkeys)
 end
 
 def hotkeys
