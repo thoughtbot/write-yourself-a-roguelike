@@ -10,7 +10,7 @@ We will implement all of these. Looking at this list, "data" should immediately 
 
 ```yaml
 ---
-- name: Acheologist
+- name: Archeologist
   hotkey: a
 - name: Barbarian
   hotkey: b
