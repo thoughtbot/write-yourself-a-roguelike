@@ -2,6 +2,7 @@ $LOAD_PATH.unshift "."
 
 require "curses"
 require "yaml"
+require "pp"
 require "player"
 require "attribute_generator"
 require "ui"
