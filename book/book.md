@@ -33,4 +33,4 @@
 
 # Dungeon Generation
 
-<<[dungeon_generation/generating_rooms.md]
+<<[dungeon_generation/generating_a_room.md]

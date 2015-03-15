@@ -1,0 +1,5 @@
+---
+stone: " "
+floor: "."
+horizontal_wall: "-"
+vertical_wall: "|"
