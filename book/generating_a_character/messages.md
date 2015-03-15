@@ -72,7 +72,7 @@ and then change `render` to the following:
 ```ruby
 def render
   ui.message(0, 0, messages[:name])
-  ui.message(7, 1, messages[:by])
+  ui.message(1, 7, messages[:by])
   handle_choice prompt
 end
 ```
@@ -81,7 +81,7 @@ And change `prompt` to:
 
 ```ruby
 def prompt
-  ui.choice_prompt(0, 3, messages[:pick_random], "ynq")
+  ui.choice_prompt(3, 0, messages[:pick_random], "ynq")
 end
 ```
 

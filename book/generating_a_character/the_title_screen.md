@@ -23,7 +23,40 @@ close_screen     # closes the ncurses screen
 
 If you run this program, you will see the terminal go black and upon pressing a character it will return back to normal.
 
-Now that we've got a simple curses example running, let's work on our title screen. We're going to break our code up into three files. The first file we'll create is named `game.rb` and it should contain the following:
+Now that we've got a simple curses example running, let's work on our title screen. We're going to break our code up into three files. The first file we'll create is named `ui.rb`. This will hold all of our interface routines.  We're breaking the UI into its own class for a few reasons. First, in game development, it's easy to produce code that is difficult to understand. We want to avoid this by trying to employ the single-responsibility pattern as much as possible. Tangentally, if we decide to replace our UI implementation with a different one, the isolation here makes doing that far easier. The implementation for our `UI` class will look like this:
+
+```ruby
+class UI
+  include Curses
+
+  def initialize
+    noecho # do not print characters the user types
+    init_screen
+  end
+
+  def close
+    close_screen
+  end
+
+  def message(y, x, string)
+    setpos(y, x) # place the cursor at our position
+    addstr(string) # prints a string at cursor position
+  end
+
+  def choice_prompt(y, x, string, choices)
+    message(y, x, string + " ")
+
+    loop do
+      choice = getch
+      return choice if choices.include?(choice)
+    end
+  end
+end
+```
+
+You may be wondering why we're passing values in (y, x) order instead of (x, y). We're passing the values as (y, x) because that's the order ncurses will expect to see them in. Ncurses wants the coordinates in (y, x) order because of how it renders the screen. Essentially, ncurses will start in the top left of the screen, y = 0, and then write out the entire line before moving on to the next line, y = 1. By storing the y coordinate first it can handle this process more optimally.
+
+Now let's create the file `game.rb` which will hold our `Game` class. The responsibility of the `Game` class is to execute the main run loop as well as manage setup and global state. The implementation for the `Game` class will look like this:
 
 ```ruby
 class Game
@@ -42,46 +75,14 @@ class Game
 
   def title_screen
     ui.message(0, 0, "Rhack, a NetHack clone")
-    ui.message(7, 1, "by a daring developer")
-    ui.choice_prompt(0, 3, "Shall I pick a character's race, role, gender and " + 
+    ui.message(1, 7, "by a daring developer")
+    ui.choice_prompt(3, 0, "Shall I pick a character's race, role, gender and " + 
       "alignment for you? [ynq]", "ynq")
   end
 end
 ```
 
-Then create the file `ui.rb` with:
-
-```ruby
-class UI
-  include Curses
-
-  def initialize
-    noecho # do not print characters the user types
-    init_screen
-  end
-
-  def close
-    close_screen
-  end
-
-  def message(x, y, string)
-    # positions the cursor - notice the order of the arguments!
-    setpos(y, x)
-    addstr(string) # prints a string at cursor position
-  end
-
-  def choice_prompt(x, y, string, choices)
-    message(x, y, string + " ")
-
-    loop do
-      choice = getch
-      return choice if choices.include?(choice)
-    end
-  end
-end
-```
-
-Finally, change your `main.rb` to:
+Finally, change the `main.rb` file to use our new classes:
 
 ```ruby
 $LOAD_PATH.unshift "." # makes requiring files easier
@@ -92,10 +93,6 @@ require "game"
 
 Game.new.run
 ```
-
-I've chosen to break the UI into its own class for a few reasons. First, in game development, it's easy to produce code that is difficult to understand. We want to avoid this by trying to employ the single-responsibility pattern as much as possible. Tangentally, if we decide to replace our UI implementation with a different one, the isolation here makes doing that far easier.
-
-The responsibility of our `Game` class will be to  manage all of our global state and the execute the main run loop.
 
 If you run the program now, it will look very much like the initial NetHack screen.
 
@@ -141,7 +138,7 @@ class TitleScreen
 
   def render
     ui.message(0, 0, "Rhack, a NetHack clone")
-    ui.message(7, 1, "by a daring developer")
+    ui.message(1, 7, "by a daring developer")
     handle_choice prompt
   end
 
@@ -150,7 +147,7 @@ class TitleScreen
   attr_reader :ui, :options
 
   def prompt
-    ui.choice_prompt(0, 3, "Shall I pick a character's race, role, gender and " + 
+    ui.choice_prompt(3, 0, "Shall I pick a character's race, role, gender and " + 
       "alignment for you? [ynq]", "ynq")
   end
 

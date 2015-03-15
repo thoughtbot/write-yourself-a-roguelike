@@ -8,13 +8,16 @@ What is Ncurses you ask? Ncurses stands for New Curses, it's a freeware reimplem
 
 This screen was created using Ncurses. So why do **we** need Ncurses? After all, we're just writing a simple game. Using Ruby let's try to do something simple like clearing the screen. If you're on OSX you might have written something like:
 
-
-    system("clear")
+```ruby
+system("clear")
+```
 
 Everything works great until you try to run this code on Windows. It will fail on windows because there is no `clear.exe`. On Windows we need to run:
 
-    system("CLS")
-    
+```ruby
+system("CLS")
+```
+
 Now we'd need to run code to detect the OS. We'll need to import `rbconfig` and write some code to detect the OS and choose the correct code to run. We can avoid this by using Ncurses which will do all the heavy lifting for us.
 
 We'll also be making heavy use of YAML. You could really use any data language you want (XML, JSON, etc.), but YAML seems to be a defacto choice for Ruby. We'll be using YAML to store the large amounts of data that is needed to write a game of this nature.

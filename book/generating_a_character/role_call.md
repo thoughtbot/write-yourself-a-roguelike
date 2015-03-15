@@ -131,7 +131,7 @@ For now, `random?` simply checks if `randall` was set and `random_item` just cho
 def render_screen
   ui.clear
   ui.message(0, 0, messages[:choosing])
-  ui.message(right_offset, 0, instructions)
+  ui.message(0, right_offset, instructions)
   render_choices
   handle_choice prompt
 end
@@ -159,11 +159,11 @@ Now we'll write our method for rendering our choices
 ```ruby
 def render_choices
   items.each_with_index do |item, index|
-    ui.message(right_offset, index + 2, "#{item.hotkey} - #{item}")
+    ui.message(index + 2, right_offset, "#{item.hotkey} - #{item}")
   end
 
-  ui.message(right_offset, items.length + 2, "* - Random")
-  ui.message(right_offset, items.length + 3, "q - Quit")
+  ui.message(items.length + 2, right_offset, "* - Random")
+  ui.message(items.length + 3, right_offset, "q - Quit")
 end
 ```
 
@@ -190,7 +190,7 @@ Finally let's implement `prompt` and `hotkeys`:
 
 ```ruby
 def prompt
-  ui.choice_prompt(right_offset, items.length + 4, "(end)", hotkeys)
+  ui.choice_prompt(items.length + 4, right_offset, "(end)", hotkeys)
 end
 
 def hotkeys
