@@ -87,6 +87,7 @@ Finally, change the `main.rb` file to use our new classes:
 ```ruby
 $LOAD_PATH.unshift "." # makes requiring files easier
 
+require "pp"
 require "curses"
 require "ui"
 require "game"
@@ -105,7 +106,7 @@ class Game
   def initialize
     @ui = UI.new
     @options = { quit: false, randall: false } # variable for options
-    at_exit { ui.close; p options } # See selected options at exit
+    at_exit { ui.close; pp options } # See selected options at exit
   end
 
   def run

@@ -4,7 +4,7 @@ class Game
   def initialize
     @ui = UI.new
     @options = { quit: false, randall: false }
-    at_exit { ui.close; p options }
+    at_exit { ui.close; pp options }
   end
 
   def run
