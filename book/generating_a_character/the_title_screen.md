@@ -8,7 +8,7 @@ If this fails with "Failed to build gem native extension." you might not have `n
 
 Now that we have the curses gem installed, we can start working on the title screen. We're going to base this on the NetHack title screen. The NetHack title screen is relativly simple as you can see here:
 
-![character selection](images/character.png?raw=true =600x)
+\includegraphics[width=\linewidth]{images/character.png}
 
 Let's start our game by writing the simplest curses example we can come up with. The program will initialize curses, read a single character, and then quit. To do this, create a file named `main.rb` and add the following:
 
@@ -99,7 +99,7 @@ Game.new.run
 
 If you run the program now, it will look very much like the initial NetHack screen.
 
-![Rhack](images/rhack.png?raw=true =600x)
+\includegraphics[width=\linewidth]{images/rhack.png}
 
 Moving forward, we're going to want to show more than a title screen. Let's start by refactoring our current code into something more adaptable. Refactor `game.rb` to the following:
 

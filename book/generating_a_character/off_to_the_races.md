@@ -1,6 +1,6 @@
 ## Chapter 4 - Off to the races
 
-![selection](images/race.png?raw=true =600x)
+\includegraphics[width=\linewidth]{images/race.png}
 
 In our NetHack implementation, race will determine which alignments we can choose as well as some starting stat bonuses. Race will also determine your starting alignment. Dwarves are lawful, gnomes are neutral, elves and orcs are chaotic, and humans can be any alignment (but this may be restricted by the role chosen e.g. samurai are lawful). In terms of stats, dwarves are typically stronger, gnomes and elves are generally smarter, and humans are generally balanced across the stats.
 

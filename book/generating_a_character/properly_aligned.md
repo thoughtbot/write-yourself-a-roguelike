@@ -1,6 +1,6 @@
 ## Chapter 6 - Properly aligned
 
-![selection](images/alignment.png?raw=true =600x)
+\includegraphics[width=\linewidth]{images/alignment.png}
 
 Now for the final trait.  Alignment determines how the actions you take in game will affect you. If you do things that contrast your alignment your god will be angry with you and the game will become more difficult.
 

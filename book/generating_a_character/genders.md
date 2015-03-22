@@ -1,6 +1,6 @@
 ## Chapter 5 - Genders
 
-![selection](images/gender.png?raw=true =600x)
+\includegraphics[width=\linewidth]{images/gender.png}
 
 For our purposes, gender will determine which pronoun your character will be addressed with. In actual NetHack gender does affect some interactions in the game, but we won't be going that in depth with our implementation.
 

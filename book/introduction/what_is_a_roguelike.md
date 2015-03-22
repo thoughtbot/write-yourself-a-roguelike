@@ -11,7 +11,7 @@ If you are reading this book, then bets are you already know what a roguelike is
 
 So where do these rules come from? Roguelike games get their rules and name from the game Rogue. Rogue was developed in the 1980s, but if you have ever played it, then it's clear that its influence has spread far and wide as evident in games like Dwarf Fortress and Diablo.
 
-![Rogue](images/rogue.png?raw=true =600x)
+\includegraphics[width=\linewidth]{images/rogue.png}
 
 In Rogue, you play as an adventurer who descends into a dungeon for loot and fame. There is a catch though. Until you make it to the final level and retrieve the Amulet of Yendor, you are unable to return to the previous level. If you retrieve the Amulet of Yendor and make it back to the surface then you journey home, sell all of your loot, and get admitted to the fighters guild. Huzzah!
 
