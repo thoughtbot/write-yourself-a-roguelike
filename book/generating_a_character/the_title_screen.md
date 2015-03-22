@@ -1,10 +1,12 @@
 ## Chapter 1 - The Title Screen
 
-Most gaming journeys begin with the fabled title screen - where we get to see the title of the game once again before we can begin. We're going to begin our journey the same way. To implement our title screen, and the rest of our game, we're going to need to make use of the `curses` gem. If you dont already have `curses` installed you can get it via:
+Most gaming journeys begin with the fabled title screen - where we get to see the title of the game once again before we can begin. We're going to begin our journey the same way. To implement our title screen, and the rest of our game, we're going to need to make use of the `curses` gem. If you don't have ncurses installed on your computer, please go back and read the tooling chapter in the introduction. If you have `ncurses` installed, but don't already have the `curses` gem, you can install it via:
 
     gem install curses
 
-The NetHack title screen is relativly simple as you can see here:
+If this fails with "Failed to build gem native extension." you might not have `ncurses` properly installed and should reference the tooling chapter for installation instructions.
+
+Now that we have the curses gem installed, we can start working on the title screen. We're going to base this on the NetHack title screen. The NetHack title screen is relativly simple as you can see here:
 
 ![character selection](images/character.png?raw=true =600x)
 
