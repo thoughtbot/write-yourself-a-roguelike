@@ -27,7 +27,7 @@ class Race
   def self.for_options(options)
     role = options[:role]
 
-    all.select { |race| role.races.include? race.hotkey
+    all.select { |race| role.races.include? race.hotkey }
   end
 
   def self.all
