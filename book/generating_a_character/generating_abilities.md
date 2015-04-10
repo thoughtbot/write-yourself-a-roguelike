@@ -126,7 +126,7 @@ class AttributeGenerator
     remaining_points.times do
       increment_random_attribute
     end
-    
+
     base_attributes
   end
 
@@ -152,7 +152,7 @@ def setup_character
   options[:player] = make_player
 end
 
-def make_player  
+def make_player
   Player.new(options).tap do
     %i(role race gender alignment).each { |key| options.delete(key) }
   end
@@ -161,20 +161,20 @@ end
 
 Now for the last set of attributes we'll want to assign hitpoints and power. These operate a little differently because you need to store the current amount you have as well as your maximum. Hitpoints are determined by adding together your role's hitpoints and your race's hitpoints. Your power is determined by adding your role's power plus some random number (usually zero) and your race's power. In `roles.yaml` and `races.yaml` add `hitpoints` and `power` and `rand_power` according to the following charts:
 
-                 hitpoints  power  rand_power
-    Acheologist  11         1      0
-    Barbarian    14         1      0
-    Caveman      14         1      0
-    Healer       11         1      4
-    Knight       14         1      4
-    Monk         12         2      2
-    Priest       12         4      3
-    Rogue        10         1      0
-    Ranger       13         1      0
-    Samurai      13         1      0
-    Tourist      8          1      0
-    Valkyrie     14         1      0
-    Wizard       10         4      3
+                  hitpoints  power  rand_power
+    Archeologist  11         1      0
+    Barbarian     14         1      0
+    Caveman       14         1      0
+    Healer        11         1      4
+    Knight        14         1      4
+    Monk          12         2      2
+    Priest        12         4      3
+    Rogue         10         1      0
+    Ranger        13         1      0
+    Samurai       13         1      0
+    Tourist       8          1      0
+    Valkyrie      14         1      0
+    Wizard        10         4      3
 
 ***
 
