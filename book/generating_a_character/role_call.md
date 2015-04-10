@@ -15,7 +15,7 @@ We will implement all of these. Looking at this list, "data" should immediately 
 - name: Barbarian
   hotkey: b
 - name: Caveman
-  hotkey: d
+  hotkey: c
 - name: Healer
   hotkey: h
 - name: Knight
