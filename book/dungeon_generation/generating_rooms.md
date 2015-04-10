@@ -66,7 +66,7 @@ class Dungeon
   end
 
   def generate
-    create_room
+    make_rooms
     print_dungeon
   end
 
@@ -75,9 +75,11 @@ class Dungeon
   attr_reader :dungeon, :rects
 
   def print_dungeon
-    dungeon.each do |row|
-      puts row.join
-    end
+    puts dungeon.map(&:join)
+  end
+
+  def make_rooms
+    create_room
   end
 
   def create_room
@@ -96,7 +98,7 @@ class Dungeon
       (rect.left > 0 ? xlim : 3) +
       rand(rect.right - (rect.left > 0 ? rect.left : 3) - dx - xborder + 1)
 
-    yabs = rect.top + 
+    yabs = rect.top +
       (rect.top > 0 ? ylim : 2) +
       rand(rect.top - (rect.bottom > 0 ? rect.top : 2) - dy - yborder + 1)
 
@@ -127,6 +129,110 @@ Dungeon.new.generate
 
 Now that we've generated a single room we're going to want to generate more of course. The gist of how we'll do this is by splitting our dungeon into new rectangles when we've placed a room. First we'll start with a list with a single rectangle (the entire dungeon) in it. We randomly select a rectangle and then generate a random room to fit into it. We then split that rectangle into 4 more rectangles that will surround our room. We'll discard any rectangles that are too small to fit a room into and then put the sub rectangles back into the list. We're done adding rooms when either the list is empty or we've added a maximum number of rooms. This process is easier to understand once visualized:
 
+\includegraphics[width=\linewidth]{images/room_generation.png}
+
+So now, well change our code so that before we call `add_room` we'll split our rect and discard the unusable rectangles that result. Then we can keep calling `create_room` while there are still rectangles available. Eventually we'll either have created a maximum number of rooms (fairly unlikely) or we'll have run out of area big enough to add more rooms. Let's make the following changes:
+
+```ruby
+class Room < Rect; end
+```
+
+```ruby
+class Dungeon
+  # ...
+
+  # Add this to the top
+  MAX_NUMBER_OF_ROOMS = 40
+
+  # ...
+
+  def initialize
+    # ...
+    @rooms = []
+  end
+
+  # ...
+
+  # modify the existing makerooms function
+  def makerooms
+    while (rooms.count < MAX_NUMBER_OF_ROOMS) && rects.any?
+      return unless create_room
+    end
+  end
+
+  def create_room
+    # ...
+
+    room = Room.new(xabs, yabs, xabs+wtmp-1, yabs+htmp-1)
+    rooms << room
+
+    true
+  end
+
+  # ...
+end
+```
+
+If you run this now you'll get something like:
+
+```
+            ----------- -------                                    ------
+        ---------------------------------------          -------  --------
+       --------......|.....|-----------.......|----------------|--|......|
+       |......|......|--------........|.......|------|........||----------
+       |......|......||......|........|.......|..----|........|||........|
+     --|......|-.....||......|...--------------..|...|........|||........|
+     |.|......||.....||......|---|..........|....|...|........|||........|
+     |.--------|.....||......|...|..........|....|...|........|-----------
+     |.........|--------------...|..........|....----|........|----|....|
+     |.........|....|............|..........|........----------   ||....|
+     |.........|....|............----------------------|.....|    ||....|
+     -----------....----------------         |........||.....|    -------
+               ----------|...|               ----------|.....|
+                         -----                         -------
+```
+
+Now we need to implement our split_rects function:
+
+```ruby
+# add this as a private method
+def split_rects(r1, r2)
+  rects.delete(r1)
+
+  # if any of the rectangles intersect let's delete them and add new ones
+  (rects.count-1).downto(0) do |i|
+    r = intersect?(rects[i], r2)
+    if r
+      split_rects(rects[i], r)
+    end
+  end
+
+  if r2.top - r1.top - 1 > (r1.bottom < ROWNO - 1 ? 2 * YLIM : YLIM + 1) + 4
+    r = r1.dup
+    r.bottom = r2.top - 2
+    add_rect(r)
+  end
+
+  if r2.left - r1.left - 1 > (r1.right < COLNO - 1 ? 2 * XLIM : XLIM + 1) + 4
+    r = r1.dup
+    r.right = r2.left - 2
+    add_rect(r)
+  end
+
+  if r1.bottom - r2.bottom - 1 > (r1.top > 0 ? 2 * YLIM : YLIM + 1) + 4
+    r = r1.dup
+    r.top = r2.bottom + 2
+    add_rect(r)
+  end
+
+  if r1.right - r2.right - 1 > (r1.left > 0 ? 2 * XLIM : XLIM + 1) + 4
+    r = r1.dup
+    r.left = r2.right + 2
+    add_rect(r)
+  end
+end
+```
+
 It's very easy to tell if two rectangles overlap using axis-aligned bounding boxes or AABBs. AABBs see frequent usage in shoot-em up games, due to the simplicity of the equation involved. Basically, in order to check if two triangles overlap you have to make the following 4 checks:
 
 1. The top of triangle A is higher than the bottom of triangle B
@@ -136,7 +242,7 @@ It's very easy to tell if two rectangles overlap using axis-aligned bounding box
 
 \includegraphics[width=\linewidth]{images/aabbs.png}
 
-An algorithm in Ruby, might looks something like this.
+Our `intersect?` function will need to check if they intersect and then return the intersection
 
 ```ruby
 def intersects?(rect)
@@ -147,4 +253,4 @@ def intersects?(rect)
 end
 ```
 
-So as you can see it simply checks the 4 conditions we've specified using `>` and `<`. Now that we know how to check if two rectangles overlap, let's discuss how we'll apply this. A fairly naive program would generate a random rectangle and if it didn't intersect any other rectangles we'd place it in the room. Rinse and repeat for the desired number of rooms. 
+So as you can see it simply checks the 4 conditions we've specified using `>` and `<`. Now that we know how to check if two rectangles overlap, let's discuss how we'll apply this. A fairly naive program would generate a random rectangle and if it didn't intersect any other rectangles we'd place it in the room. Rinse and repeat for the desired number of rooms.
