@@ -144,7 +144,7 @@ class AttributeGenerator
 end
 ```
 
-Make sure you have `:starting_attributes` and `attribute_probabilities` as `attr_readers` in `Role`. Also add `require`s for `Player` and `AttributeGenerator` to `main.rb`. Now in `game.rb` we can instantiate our player:
+Make sure you have `starting_attributes` and `attribute_probabilities` as `attr_readers` in `Role`. Also add `require`s for `Player` and `AttributeGenerator` to `main.rb`. Now in `game.rb` we can instantiate our player:
 
 ```ruby
 def setup_character
