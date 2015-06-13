@@ -200,22 +200,22 @@ class DungeonGenerator
   def render_floor(room)
     room.left.upto(room.right) do |x|
       room.top.upto(room.bottom) do |y|
-        dungeon[y][x] = "."
+        dungeon[y][x] = FLOOR
       end
     end
   end
 
   def render_vertical_walls(room)
     room.top.upto(room.bottom) do |y|
-      dungeon[y][room.left - 1] = "|"
-      dungeon[y][room.right + 1] = "|"
+      dungeon[y][room.left - 1] = VWALL
+      dungeon[y][room.right + 1] = VWALL
     end
   end
 
   def render_horizontal_walls(room)
     (room.left - 1).upto(room.right + 1) do |x|
-      dungeon[room.top - 1][x] = "-"
-      dungeon[room.bottom + 1][x] = "-"
+      dungeon[room.top - 1][x] = HWALL
+      dungeon[room.bottom + 1][x] = HWALL
     end
   end
 end
