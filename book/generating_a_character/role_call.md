@@ -113,7 +113,7 @@ def render
 end
 ```
 
-In this function we check to see if we need to randomly select an item. If we do we don't want to render the screen, so it simply sets the option and returns. Otherwise we'll render the screen. The implementation for `random?` and `random_item` look like this:
+In this method we check to see if we need to randomly select an item. If we do we don't want to render the screen, so it simply sets the option and returns. Otherwise we'll render the screen. The implementation for `random?` and `random_item` look like this:
 
 ```ruby
 def random?
@@ -167,7 +167,7 @@ def render_choices
 end
 ```
 
-This function is relatively straight forward. We loop through each item and print out the hotkey and the name of the role (we're cheating here by not printing "a" or "an" in front of the name, but it's not really important).
+This method is relatively straight forward. We loop through each item and print out the hotkey and the name of the role (we're cheating here by not printing "a" or "an" in front of the name, but it's not really important).
 
 Now let's implement `handle_choice` and `item_for_hotkey`:
 
@@ -207,7 +207,7 @@ Now we're ready to initialize this screen in `game.rb`. Add the following consta
 TRAITS = [Role]
 ```
 
-Then change the `run` function to look like this:
+Then change the `run` method to look like this:
 
 ```ruby
 def run
@@ -238,7 +238,7 @@ require "role"
 require "selection_screen"
 ```
 
-**Above** the `require "game"` line. Next, we'll need to modify our `UI` class to have a clear function. Curses provides this function, but it's private, so we'll need to add the following to `ui.rb`:
+**Above** the `require "game"` line. Next, we'll need to modify our `UI` class to have a `clear` method. Curses provides this method, but it's private, so we'll need to add the following to `ui.rb`:
 
 ```ruby
 def clear
