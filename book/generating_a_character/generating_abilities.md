@@ -4,17 +4,17 @@ So once a player has chosen their role, race, gender, and alignment, we'll need 
 
 Let's briefly go over each stat and how it should affect the game.
 
-Strength will determine how much weight we can handle in our inventory. It will also determine how much melee damage we do as well as how far we can throw things. In NetHack, there are a number of other things that strength affects but we will ignore those for the purpose of out implementation. For display, stength is a bit odd because for a value between 18 and 19 it is shown as a percentage. A value of 18/35 would mean that you are 35% of the way between 18 and 19.
+*Strength* will determine how much weight we can handle in our inventory. It will also determine how much melee damage we do as well as how far we can throw things. In NetHack, there are a number of other things that strength affects but we will ignore those for the purpose of out implementation. For display, stength is a bit odd because for a value between 18 and 19 it is shown as a percentage. A value of 18/35 would mean that you are 35% of the way between 18 and 19.
 
-Dexterity will determine your chance of hitting monsters, either by melee combat, missles, or spells.
+*Dexterity* will determine your chance of hitting monsters, either by melee combat, missles, or spells.
 
-Constitution increases your healing rate and also attributes to how much weight you can carry. This is useful for roles with low strength like Tourist.
+*Constitution* increases your healing rate and also attributes to how much weight you can carry. This is useful for roles with low strength like Tourist.
 
-Intelligence is used for reading books and spellcasting for roles other than healers, knights, monks, priests, and valkyries.
+*Intelligence* is used for reading books and spellcasting for roles other than healers, knights, monks, priests, and valkyries.
 
-Wisdom is used for spellcasting for healers, knights, monks, priests, and valkyries. It also determines how fast your power regenerates and how much power you gain when levelling up.
+*Wisdom* is used for spellcasting for healers, knights, monks, priests, and valkyries. It also determines how fast your power regenerates and how much power you gain when levelling up.
 
-Charisma is used for getting better prices in shops.
+*Charisma* is used for getting better prices in shops.
 
 Now for each role there's a specific assignment of points. We're going to add starting attributes to `data/roles.yaml` an entry would look something like this:
 
