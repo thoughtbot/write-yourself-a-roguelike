@@ -6,3 +6,4 @@ Here is a list of contributers who will be listed in the final book:
 * mus0u - Typos
 * rafadc - Typo
 * edwardloveall <edward@edwardloveall.com> - Pointed out method/function distinction
+* christoshrousis - Typo
