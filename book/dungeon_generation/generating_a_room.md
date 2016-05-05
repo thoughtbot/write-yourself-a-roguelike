@@ -530,4 +530,6 @@ dungeon = DungeonGenerator.new.generate
 DungeonPrinter.new(dungeon).print
 ```
 
+If you haven't done so already, I'd suggest separating each class into it's own file to make editing the project easier.
+
 At this point, we're doing a fairly good job of adhering to the Single Responsibility Principle and it should make evolving our code go a lot more smoothly than if we hadn't. We have a lot ahead of us in order to get our DungeonGenerator to where we want. Next, we'll be tackling one of the hardest parts of generating our dungeon - adding more rooms.
