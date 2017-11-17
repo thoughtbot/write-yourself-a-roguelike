@@ -4,22 +4,6 @@ You are about to embark on a journey. This journey will be plagued with orcs,
 gnomes, algorithms, data structures, and kittens. You, valiant developer, will
 be writing a Roguelike.
 
-## Releasing an update
-
-We're using tags and releases to track milestones in book updates.
-
-* Upload sample.pdf to <http://thoughtbot.com/write-yourself-a-roguelike-sample.pdf> by
-  updating the website repo (samples are in public/).
-* Build a zip of non-sample content:
-
-  ```
-  $ paperback build
-  $ cd build/write-yourself-a-roguelike
-  $ rm write-yourself-a-roguelike.zip
-  $ zip write-yourself-a-roguelike.zip images/* write-yourself-a-roguelike.*
-  ```
-* Upload the zip to Gumroad and attach it to the GitHub release.
-
 ## Outline
 
 - [x] Intro
