@@ -13,7 +13,7 @@ So where do these rules come from? Roguelike games get their rules and name from
 
 \includegraphics[width=\linewidth]{images/rogue.png}
 
-In Rogue, you play as an adventurer who descends into a dungeon for loot and fame. There is a catch though. Until you make it to the final level and retrieve the Amulet of Yendor, you are unable to return to the previous level. If you retrieve the Amulet of Yendor and make it back to the surface then you journey home, sell all of your loot, and get admitted to the fighters guild. Huzzah!
+In Rogue, you play as an adventurer who descends into a dungeon for loot and fame. There is a catch though: Until you make it to the final level and retrieve the Amulet of Yendor, you are unable to return to the previous level. If you retrieve the Amulet of Yendor and make it back to the surface then you journey home, sell all of your loot, and get admitted to the fighters guild. Huzzah!
 
 Now, let's get  back to the rules because they are important for the task at hand. A huge part of writing a good roguelike is the procedurally generated environments. These can be anything from dungeons to entire worlds. The importance of the procedurally generated environments is replayability. You're unlikely to have a similar gaming experience between plays. It creates an incentive to play over and over. Our roguelike will be far more exciting if one time you play you put on cursed boots and starve to death because you can't reach the floor and the next time you get assaulted by a feral kitten early in the game.
 
