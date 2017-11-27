@@ -4,7 +4,7 @@ For a game like NetHack, there is a lot of information that goes in to creating 
 
 We'll start by allowing the player to choose their role. In NetHack, these are the roles a player can select:
 
-\includegraphics[width=\linewidth]{images/role.png}
+![](figures/role.png)
 
 We will implement all of these. Looking at this list, "data" should immediately come to mind. We're going to create another data file to hold the information for our roles. To start with, we're going to give each role a `name` and a `hotkey`. Create `data/roles.yaml` with the following:
 
@@ -268,6 +268,6 @@ role:
 
 If you run the program and choose "n" for the first choice then you should see:
 
-\includegraphics[width=\linewidth]{images/role_example.png}
+![](figures/role_example.png)
 
 Choosing any role will print out the options again, but this time it will display the selected role as well. If you choose "y" at the title screen a random role will appear here. Now that we've laid down the framework for setting traits it should be fairly easy to implement the remaining ones.
