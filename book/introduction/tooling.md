@@ -12,7 +12,7 @@ This screen was created using Ncurses. So why do *we* need Ncurses? After all, w
 system("clear")
 ```
 
-Everything works great until you try to run this code on Windows. It will fail on windows because there is no `clear.exe`. On Windows we need to run:
+Everything works great until you try to run this code on Windows. It will fail on Windows because there is no `clear.exe`. On Windows we need to run:
 
 ```ruby
 system("CLS")
