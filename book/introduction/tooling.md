@@ -6,7 +6,7 @@ What is ncurses you ask? ncurses stands for *new curses*, it's a freeware reimpl
 
 \includegraphics[width=\linewidth]{images/ncurses-example.png}
 
-This screen was created using Ncurses. So why do *we* need Ncurses? After all, we're just writing a simple game. Using Ruby let's try to do something simple like clearing the screen. If you're on macOS you might have written something like:
+This screen was created using ncurses. So why do *we* need ncurses? After all, we're just writing a simple game. Using Ruby let's try to do something simple like clearing the screen. If you're on macOS you might have written something like:
 
 ```ruby
 system("clear")
