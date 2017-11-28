@@ -32,7 +32,7 @@ class AttributeGenerator
   def next_random_attribute
     x = rand(100)
 
-    base_attributes.keys.find do |key|
+    base_attributes.keys.detect do |key|
       (x -= role.attribute_probabilities[key]) <= 0
     end
   end

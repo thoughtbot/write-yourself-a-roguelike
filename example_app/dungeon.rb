@@ -101,12 +101,12 @@ end
 class DungeonGenerator
   DEFAULT_WIDTH = 80
   DEFAULT_HEIGHT = 21
-  DEFAULT_TILESET_NAME = "default"
+  DEFAULT_TILESET_NAME = "default".freeze
 
   def initialize(options = {})
     @options = options
     @dungeon = Dungeon.new(width, height, tileset: tileset)
-    @rects = [ Rect.new(0, 0, width, height) ]
+    @rects = [Rect.new(0, 0, width, height)]
   end
 
   def generate
