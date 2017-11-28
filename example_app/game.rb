@@ -1,10 +1,13 @@
 class Game
-  TRAITS = [Role, Race, Gender, Alignment]
+  TRAITS = [Role, Race, Gender, Alignment].freeze
 
   def initialize
     @ui = UI.new
     @options = { quit: false, randall: false }
-    at_exit { ui.close; pp options }
+    at_exit do
+      ui.close
+      pp options
+    end
   end
 
   def run

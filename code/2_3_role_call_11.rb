@@ -7,5 +7,5 @@ def handle_choice(choice)
 end
 
 def item_for_hotkey(hotkey)
-  items.find { |item| item.hotkey == hotkey }
+  items.detect { |item| item.hotkey == hotkey }
 end

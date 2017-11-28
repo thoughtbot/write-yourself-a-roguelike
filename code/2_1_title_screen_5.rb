@@ -2,7 +2,12 @@ class Game
   def initialize
     @ui = UI.new
     @options = { quit: false, randall: false } # variable for options
-    at_exit { ui.close; pp options } # See selected options at exit
+
+    # See selected options at exit
+    at_exit do
+      ui.close
+      pp options
+    end
   end
 
   def run

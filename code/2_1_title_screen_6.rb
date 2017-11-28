@@ -15,8 +15,9 @@ class TitleScreen
   attr_reader :ui, :options
 
   def prompt
-    ui.choice_prompt(3, 0, "Shall I pick a character's race, role, gender and " + 
-      "alignment for you? [ynq]", "ynq")
+    ui.choice_prompt(3, 0,
+                     "Shall I pick a character's race, role, gender and " +
+                     "alignment for you? [ynq]", "ynq")
   end
 
   def handle_choice(choice)

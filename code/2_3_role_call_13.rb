@@ -1,1 +1,1 @@
-TRAITS = [Role]
+TRAITS = [Role].freeze
