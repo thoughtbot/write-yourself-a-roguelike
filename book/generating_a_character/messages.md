@@ -4,10 +4,10 @@ There are going to be a lot of in-game messages and to make things more fluid we
 
 ```yaml
 ---
-title:
-  name: Rhack, a NetHack clone
-  by: by a daring developer
-  pick_random: "Shall I pick a character's race, role, gender and alignment for you? [ynq]"
+:title:
+  :name: Rhack, a NetHack clone
+  :by: by a daring developer
+  :pick_random: "Shall I pick a character's race, role, gender and alignment for you? [ynq]"
 ```
 
 Next, we'll want to update our `TitleScreen` class to make use of these messages. In order to do that, we'll first need some way to load the yaml file. In this situation, it's a good idea to isolate an external dependency like YAML in order to make it easier to replace or modify in the future. We took this exact approach with Curses by extracting the UI into its own class. Let's extract a `DataLoader` class that knows how to load our data for us. Create a `data_loader.rb` file with the following:
@@ -19,27 +19,10 @@ class DataLoader
   end
 
   def load_file(file)
-    symbolize_keys YAML.load_file("data/#{file}.yaml")
-  end
-
-  private
-
-  def symbolize_keys(object)
-    case object
-    when Hash
-      object.each_with_object({}) do |(key, value), hash|
-        hash[key.to_sym] = symbolize_keys(value)
-      end
-    when Array
-      object.map { |element| symbolize_keys(element) }
-    else
-      object
-    end
+    YAML.load_file("data/#{file}.yaml")
   end
 end
 ```
-
-The reason behind `symbolize_keys` is that YAML will parse all the keys as strings and I prefer symbols for this. Even though `ActiveSupport` has a similar method, we're going to leave it out because it won't work directly with arrays. Our implementation will symbolize the keys correctly for hashes or arrays even if they are nested.
 
 Now we'll create a global way to access these messages. Create a file called `messages.rb` with the following:
 
