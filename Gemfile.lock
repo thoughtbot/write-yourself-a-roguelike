@@ -1,0 +1,13 @@
+GEM
+  remote: https://rubygems.org/
+  specs:
+    pandoc-ruby (2.0.2)
+
+PLATFORMS
+  ruby
+
+DEPENDENCIES
+  pandoc-ruby!
+
+BUNDLED WITH
+   1.16.0.pre.3
