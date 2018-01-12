@@ -1,0 +1,6 @@
+---
+title: Write Yourself a Roguelike
+author: thoughtbot
+rights: MIT License
+language: en-US
+...
