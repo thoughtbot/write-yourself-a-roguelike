@@ -1,0 +1,27 @@
+---
+- name: Archeologist
+  hotkey: a
+- name: Barbarian
+  hotkey: b
+- name: Caveman
+  hotkey: c
+- name: Healer
+  hotkey: h
+- name: Knight
+  hotkey: k
+- name: Monk
+  hotkey: m
+- name: Priest
+  hotkey: p
+- name: Rogue
+  hotkey: r
+- name: Ranger
+  hotkey: R
+- name: Samurai
+  hotkey: s
+- name: Tourist
+  hotkey: t
+- name: Valkyrie
+  hotkey: v
+- name: Wizard
+  hotkey: w
