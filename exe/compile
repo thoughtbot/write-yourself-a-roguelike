@@ -1,0 +1,12 @@
+#!/usr/bin/env ruby
+
+require "pathname"
+
+source_path = (Pathname(__dir__) + "../lib").expand_path
+$LOAD_PATH << source_path
+
+require "book"
+
+src = Book.new
+src.compile
+src.cleanup
