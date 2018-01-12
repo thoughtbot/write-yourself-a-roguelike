@@ -4,7 +4,7 @@ In order to make our roguelike we'll be using a few different tools. First off, 
 
 What is ncurses you ask? ncurses stands for *new curses*, it's a freeware reimplementation of the original curses library. Its purpose is to make managing screen state easier and more portable. If you've ever installed some flavor of Linux on a computer you might have seen something like this:
 
-\includegraphics[width=\linewidth]{images/ncurses-example.png}
+![](figures/ncurses-example.png)
 
 This screen was created using ncurses. So why do *we* need ncurses? After all, we're just writing a simple game. Using Ruby let's try to do something simple like clearing the screen. If you're on macOS you might have written something like:
 

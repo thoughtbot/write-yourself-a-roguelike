@@ -1,6 +1,6 @@
 ## Chapter ii - What is NetHack?
 
-\includegraphics[width=\linewidth]{images/nethack.png}
+![](figures/nethack.png)
 
 NetHack is an ASCII based roguelike originally released in 1987, but it is currently still being further developed. It is a sort of evolution of Rogue. You're still descending down through levels and levels of dungeons to retrieve the Amulet of Yendor, but your goal now is to escape the dungeon, ascend through the elemental planes until you get to the astral plane in which you offer the amulet to your assigned god and are granted demigodhood (never thought I'd type that word).
 
