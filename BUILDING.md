@@ -4,6 +4,8 @@ There is a build tool included with this project that will allow you to compile 
 
     $ bundle install
 
+We then need to have [Pandoc](http://pandoc.org/installing.html) installed.
+
 Now, anytime you’d like to compile the book you can simply run the compile script:
 
     $ exe/compile
